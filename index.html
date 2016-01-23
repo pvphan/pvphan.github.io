@@ -1,53 +1,95 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>&lt;page-name/&gt; by pvphan</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <title>Paul Vinh Phan by pvphan</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>&lt;page-name/&gt;</h1>
-        <p>dimmi dimmi se mai fu fatta cosa alcuna</p>
+    <div id="container">
+      <div class="inner">
 
+        <header>
+          <h1>Paul Vinh Phan</h1>
+          <h2>engineer and programmer</h2>
+        </header>
 
-        <p class="view"><a href="https://github.com/pvphan">View My GitHub Profile</a></p>
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/pvphan" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
 
-      </header>
-      <section>
-        <h3>
-<a id="hi-there" class="anchor" href="#hi-there" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hi there!</h3>
+        <hr>
 
-<p>Just goofing to get the markdown pages working. Supposed to be in the <code>gh-pages</code> branch.</p>
+        <section id="main_content">
+          <h1>
+<a id="hi-there" class="anchor" href="#hi-there" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Hi there!</h1>
+
+<p>Welcome to my home page! My name is Paul Vinh Phan, I am an engineer and programmer. Below is a list of some of the projects / hobbies I've tinkered with. I'm also going to school part-time with <a href="http://omscs.gatech.edu/">Georgia Tech</a> for my MS in Computer Science, specializing in Computation Perception and Robotics. I hope you find something interesting in here!</p>
+
+<h2>
+<a id="web-connected-3d-printer-in-garage-octoprint" class="anchor" href="#web-connected-3d-printer-in-garage-octoprint" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Web-connected 3D Printer in garage (OctoPrint)</h2>
+
+<p>3D printing is rewarding and useful. Even more so when it can be done from anywhere in the world! Thanks to the open-source framework <a href="https://github.com/foosel/OctoPrint">OctoPrint</a>, all it takes is a Raspberry Pi and a little Linux knowledge start and monitor 3D prints from any web browser.</p>
+
+<p>If my printer is currently online, tune in to see if something is in the works!</p>
+
+<p><a href="http://66.27.122.193:5000/">http://66.27.122.193:5000/</a></p>
+
+<h2>
+<a id="boombox" class="anchor" href="#boombox" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a href="https://drive.google.com/file/d/0B583SVM5scJ1aF9uUlZYM2hTYlk/view?usp=sharing">BoomBox</a>
+</h2>
+
+<p>I really enjoy going to the shooting range and punching some holes in some paper. My roommate and I thought it'd be fun to design a device you could attach to a pistol to log motion data and begin extrapolating 'good' and 'bad' habits in order to help people improve and challenge their friends! While we only ended up getting as far as a <em>very</em> <a href="https://drive.google.com/file/d/0B583SVM5scJ1aF9uUlZYM2hTYlk/view?usp=sharing">rough prototype</a>, this spun off an idea which I continued to run with: a web application which automatically scores pictures of targets which you've shot, ShotLog.us!</p>
+
+<h2>
+<a id="shotlogus" class="anchor" href="#shotlogus" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a href="https://shotlog.us">ShotLog.us</a>
+</h2>
+
+<p>It's currently up on the web, running on AWS EC2, AWS S3, <a href="rubyonrails.org">Ruby on Rails</a>, and <a href="http://opencv.org/">OpenCV</a>. Though it only has the core feature of 'scoring' the target. At some point I'll come back and implement the remaining core features: improvement tracking and friend leader-boards!</p>
+
+<p>Feel free to give it a try! The standardized target to print and shoot is linked on the main page.</p>
+
+<p>A special thanks to my friend <a href="https://github.com/mjsteger/">mjsteger</a>, for helping me glue my code together, and to Michael Hartl's <a href="https://www.railstutorial.org/">Rails Tutorial</a>, which got me going on RoR development!</p>
+
+<h2>
+<a id="mechanical-keyboards" class="anchor" href="#mechanical-keyboards" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Mechanical Keyboards</h2>
 
 <h3>
-<a id="simple-template" class="anchor" href="#simple-template" aria-hidden="true"><span class="octicon octicon-link"></span></a>Simple Template</h3>
+<a id="micromechboard" class="anchor" href="#micromechboard" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>MicroMechBoard</h3>
 
-<p>Trying the simple template, looks like github, which is nice.</p>
-
-<h3>
-<a id="staying-away-from-creating-pages-manually" class="anchor" href="#staying-away-from-creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Staying away from creating pages manually</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>I stumbled across an Open Source Hardware project of a small, split-hand mechanical keyboard. The project code and hardware files for <a href="https://github.com/wyager/MicroMechBoard">Will Yager's MicroMechBoard</a> are all excellent and posted on GitHub. I followed along with his instructions and blog post and the keyboard came out exactly as advertised!</p>
 
 <h3>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<a id="ergodox" class="anchor" href="#ergodox" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a href="https://drive.google.com/folderview?id=0B583SVM5scJ1RGdLX2swSmJzVUE&amp;usp=sharing">ErgoDox</a>
+</h3>
 
-<p>Testing linking, hi <a href="https://github.com/ehphan" class="user-mention">@ehphan</a>!</p>
-      </section>
-      <footer>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+<p>Sometime later, I built another split-hand mechanical keyboard called the <a href="ergodox.org">ErgoDox</a> for my friend (the one who helped me with ShotLog, in fact!), and it was a wonderful experience. All of this following along in the design of a keyboard made me bold enough to begin my own forray into it.</p>
+
+<h3>
+<a id="mgh60" class="anchor" href="#mgh60" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a href="https://oshpark.com/shared_projects/XVIElYy4">mGH60</a>
+</h3>
+
+<p>Thanks to the generous and open mechanical keyboard community, I forked user komar007's GH60 keyboard design. I've started by shrinking the hardware onto a small, reprogrammable board which I can use to begin prototyping. I've named the design the mGH60, a 'miniature' version of the original. As with the original design, I've used KiCAD to modify the existing files.</p>
+
+<p>I've <a href="https://oshpark.com/shared_projects/XVIElYy4">shared</a> the <a href="https://oshpark.com/">OSH Park</a> project so you can download or fabricate the mGH60 too!</p>
+
+<p>The next step will begin playing around in the <a href="https://github.com/tmk/tmk_keyboard">tmk_keyboard</a> code to get the mGH60 communicating with the <a href="https://www.bluegiga.com/en-US/products/ble113-bluetooth-smart-module/">BLE113</a> Bluetooth 4.0 module I already have. If all goes well, a "full-sized" 60% PCB design will be next!</p>
+        </section>
+
+        <footer>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
   </body>
 </html>
