@@ -32,56 +32,61 @@
           <h1>
 <a id="hi-there" class="anchor" href="#hi-there" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Hi there!</h1>
 
-<p>Welcome to my home page! My name is Paul Vinh Phan, I am an engineer and programmer. Below is a list of some of the projects / hobbies I've tinkered with. I'm also going to school part-time with <a href="http://omscs.gatech.edu/">Georgia Tech</a> for my MS in Computer Science, specializing in Computation Perception and Robotics. I hope you find something interesting in here!</p>
+<p>Welcome to my home page! My name is Paul Vinh Phan, I am an engineer and programmer. At work I primarily do CAD automation (CATIA V5) and other engineering applications. Below is a list of some of the projects / hobbies I'm tinkering with. I'm also going to school part-time with <a href="http://omscs.gatech.edu/">Georgia Tech</a> for a MS in Computer Science, specializing in Computation Perception and Robotics. The space where hardware and software collide is where I like to spend most of my time. </p>
+
+<p>I hope you find something interesting here!</p>
 
 <h2>
-<a id="web-connected-3d-printer-in-garage-octoprint" class="anchor" href="#web-connected-3d-printer-in-garage-octoprint" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Web-connected 3D Printer in garage (OctoPrint)</h2>
+<a id="3d-printing-from-the-web-octoprint" class="anchor" href="#3d-printing-from-the-web-octoprint" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3D Printing from the web (OctoPrint)</h2>
 
-<p>3D printing is rewarding and useful. Even more so when it can be done from anywhere in the world! Thanks to the open-source framework <a href="https://github.com/foosel/OctoPrint">OctoPrint</a>, all it takes is a Raspberry Pi and a little Linux knowledge start and monitor 3D prints from any web browser.</p>
+<p>3D printing is rewarding and useful. Even more so when it can be done from anywhere in the world! Thanks to the open-source framework <a href="https://github.com/foosel/OctoPrint">OctoPrint</a>, all it takes is a Raspberry Pi and a little Linux knowledge to start and monitor 3D prints from any web browser.</p>
 
-<p>If my printer is currently online, tune in to see if something is in the works!</p>
-
-<p><a href="http://66.27.122.193:5000/">http://66.27.122.193:5000/</a></p>
+<p>If the Printrbot in my garage is currently online, <a href="http://66.27.122.193:5000/">tune in</a> via the 'Control' tab to see if something is in the works!</p>
 
 <h2>
-<a id="boombox" class="anchor" href="#boombox" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a href="https://drive.google.com/file/d/0B583SVM5scJ1aF9uUlZYM2hTYlk/view?usp=sharing">BoomBox</a>
-</h2>
+<a id="boombox-pics" class="anchor" href="#boombox-pics" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>BoomBox [<a href="https://drive.google.com/file/d/0B583SVM5scJ1aF9uUlZYM2hTYlk/view?usp=sharing">pics</a>]</h2>
 
-<p>I really enjoy going to the shooting range and punching some holes in some paper. My roommate and I thought it'd be fun to design a device you could attach to a pistol to log motion data and begin extrapolating 'good' and 'bad' habits in order to help people improve and challenge their friends! While we only ended up getting as far as a <em>very</em> <a href="https://drive.google.com/file/d/0B583SVM5scJ1aF9uUlZYM2hTYlk/view?usp=sharing">rough prototype</a>, this spun off an idea which I continued to run with: a web application which automatically scores pictures of targets which you've shot, ShotLog.us!</p>
+<p>I really enjoy going to the shooting range and punching some holes in some paper. My friend (<a href="https://github.com/psionicpotato" class="user-mention">@psionicpotato</a>) and my roommate (<a href="https://github.com/theSadnap" class="user-mention">@theSadnap</a>) and I thought it'd be fun to design a device you could attach to a pistol to log motion data and begin extrapolating 'good' and 'bad' habits in order to help people improve and challenge their friends! </p>
+
+<p>Using our 3D printer, the PJRC Teensy 3.0, the Bluegiga WT12, and Android Studio, we got a working, but <em>very</em> <a href="https://drive.google.com/file/d/0B583SVM5scJ1aF9uUlZYM2hTYlk/view?usp=sharing">rough prototype</a> which streamed motion data to an Android smartphone! Using Python, we began writing some signal analysis code to process the input. </p>
+
+<p>This is where we stopped, but this spun off an idea which I continued to run with: a web application which automatically scores pictures of targets which you've shot, ShotLog.us.</p>
 
 <h2>
 <a id="shotlogus" class="anchor" href="#shotlogus" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a href="https://shotlog.us">ShotLog.us</a>
 </h2>
 
-<p>It's currently up on the web, running on AWS EC2, AWS S3, <a href="rubyonrails.org">Ruby on Rails</a>, and <a href="http://opencv.org/">OpenCV</a>. Though it only has the core feature of 'scoring' the target. At some point I'll come back and implement the remaining core features: improvement tracking and friend leader-boards!</p>
+<p>Since I like target shooting, I made this web application for target-shooters to automatically score images of a <a href="https://s3-us-west-2.amazonaws.com/shotlog/templates/ShotLogTarget_21-5.pdf">standard pistol target</a>.</p>
 
-<p>Feel free to give it a try! The standardized target to print and shoot is linked on the main page.</p>
+<p>It's currently up on the web and was a great learning experience of how to use Linux cloud servers via <a href="https://aws.amazon.com/ec2/">AWS EC2</a>, cloud storage via <a href="https://aws.amazon.com/s3/">AWS S3</a>, <a href="rubyonrails.org">Ruby on Rails</a>, and <a href="http://opencv.org/">OpenCV</a> for target scoring. Though it currently only has the core feature of 'scoring' the target, at some point I'll come back and implement the remaining core features: improvement tracking and friend leader-boards!</p>
 
-<p>A special thanks to my friend <a href="https://github.com/mjsteger/">mjsteger</a>, for helping me glue my code together, and to Michael Hartl's <a href="https://www.railstutorial.org/">Rails Tutorial</a>, which got me going on RoR development!</p>
+<p>Feel free to give it a try! Print out a few of <a href="https://s3-us-west-2.amazonaws.com/shotlog/templates/ShotLogTarget_21-5.pdf">these</a>, put them at 21 ft at a range, and take 5 shots per target!</p>
+
+<p>A special thanks to my friend <a href="https://github.com/mjsteger" class="user-mention">@mjsteger</a> for helping me glue the code together, and to Michael Hartl's <a href="https://www.railstutorial.org/">Rails Tutorial</a>, which serves as the foundation to the application.</p>
 
 <h2>
 <a id="mechanical-keyboards" class="anchor" href="#mechanical-keyboards" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Mechanical Keyboards</h2>
 
-<h3>
-<a id="micromechboard" class="anchor" href="#micromechboard" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>MicroMechBoard</h3>
-
-<p>I stumbled across an Open Source Hardware project of a small, split-hand mechanical keyboard. The project code and hardware files for <a href="https://github.com/wyager/MicroMechBoard">Will Yager's MicroMechBoard</a> are all excellent and posted on GitHub. I followed along with his instructions and blog post and the keyboard came out exactly as advertised!</p>
+<p>I like to type on and make mechanical keyboards. Two I've done "build-to-print", but the third will be a new design!</p>
 
 <h3>
-<a id="ergodox" class="anchor" href="#ergodox" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a href="https://drive.google.com/folderview?id=0B583SVM5scJ1RGdLX2swSmJzVUE&amp;usp=sharing">ErgoDox</a>
-</h3>
+<a id="micromechboard-pics" class="anchor" href="#micromechboard-pics" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>MicroMechBoard [<a href="https://drive.google.com/folderview?id=0B583SVM5scJ1MldoTkNwWncyc2s&amp;usp=sharing">pics</a>]</h3>
 
-<p>Sometime later, I built another split-hand mechanical keyboard called the <a href="ergodox.org">ErgoDox</a> for my friend (the one who helped me with ShotLog, in fact!), and it was a wonderful experience. All of this following along in the design of a keyboard made me bold enough to begin my own forray into it.</p>
+<p>I stumbled across an Open Source Hardware project of a small, split-hand mechanical keyboard. The project code and hardware files for <a href="https://github.com/wyager" class="user-mention">@wyager</a>'s <a href="https://github.com/wyager/MicroMechBoard">MicroMechBoard</a> are all excellent and posted on GitHub. I followed along with his instructions and blog post and the keyboard came out exactly as advertised! This was a huge discovery for me, giving me a great starting point to inexpensive, small-scale prototype development.</p>
 
 <h3>
-<a id="mgh60" class="anchor" href="#mgh60" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a href="https://oshpark.com/shared_projects/XVIElYy4">mGH60</a>
-</h3>
+<a id="ergodox-pics" class="anchor" href="#ergodox-pics" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ErgoDox [<a href="https://drive.google.com/folderview?id=0B583SVM5scJ1RGdLX2swSmJzVUE&amp;usp=sharing">pics</a>]</h3>
 
-<p>Thanks to the generous and open mechanical keyboard community, I forked user komar007's GH60 keyboard design. I've started by shrinking the hardware onto a small, reprogrammable board which I can use to begin prototyping. I've named the design the mGH60, a 'miniature' version of the original. As with the original design, I've used KiCAD to modify the existing files.</p>
+<p>Sometime later, I built another split-hand mechanical keyboard called the <a href="ergodox.org">ErgoDox</a> for my friend (the one who helped me with ShotLog, in fact!), and it was a wonderful experience. I learned a lot about sourcing components and refined my solder-reflow techniques. As this was my second build-to-print keyboard, I decided to get a little more adventurous with the design with my next one.</p>
 
-<p>I've <a href="https://oshpark.com/shared_projects/XVIElYy4">shared</a> the <a href="https://oshpark.com/">OSH Park</a> project so you can download or fabricate the mGH60 too!</p>
+<h3>
+<a id="mgh60-to-be-the-ble60-pics" class="anchor" href="#mgh60-to-be-the-ble60-pics" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>mGH60 (to be the 'ble60') [<a href="https://drive.google.com/folderview?id=0B583SVM5scJ1YmFhdGFyUktZUjQ&amp;usp=sharing">pics</a>]</h3>
 
-<p>The next step will begin playing around in the <a href="https://github.com/tmk/tmk_keyboard">tmk_keyboard</a> code to get the mGH60 communicating with the <a href="https://www.bluegiga.com/en-US/products/ble113-bluetooth-smart-module/">BLE113</a> Bluetooth 4.0 module I already have. If all goes well, a "full-sized" 60% PCB design will be next!</p>
+<p>Thanks to the helpful and open mechanical keyboard community, I forked <a href="https://github.com/komar007" class="user-mention">@komar007</a>'s GH60 keyboard design. I've started by shrinking the hardware onto a small, reprogrammable board which I can use to begin debugging a breadboard prototype. I've named the reprogrammable board the 'mGH60', a 'miniature' version of the original.</p>
+
+<p>I've <a href="https://oshpark.com/shared_projects/XVIElYy4">shared</a> the project on <a href="https://oshpark.com/">OSH Park</a> so anyone can download or fabricate the mGH60 too! The source files are in my GitHub repository under <a href="https://github.com/pvphan/ghkb">ghkb</a>, forked from <a href="https://github.com/komar007" class="user-mention">@komar007</a>.</p>
+
+<p>The next step will begin playing around in the <a href="https://github.com/tmk/tmk_keyboard">tmk_keyboard</a> code to get the mGH60 communicating with the <a href="https://www.bluegiga.com/en-US/products/ble113-bluetooth-smart-module/">BLE113</a> Bluetooth 4.0 module I already have. If all goes well, a 60% PCB design will be next, the ble60!</p>
         </section>
 
         <footer>
