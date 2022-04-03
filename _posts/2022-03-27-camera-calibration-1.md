@@ -65,6 +65,7 @@ $$
     - $$\gamma$$ --- the skew ratio, typically 0
     - $$u_0$$ --- u coordinate of optical center in image coordinates
     - $$v_0$$ --- v coordinate of optical center in image coordinates
+    - In other literature, the intrinsic matrix $$\textbf{A}$$ is often denoted $$\textbf{K}$$, $$\alpha$$ as $$f_x$$, $$\beta$$ as $$f_y$$, etc
 - $$\textbf{k}$$ --- the **distortion vector**:
 $$
 \begin{pmatrix}
@@ -72,8 +73,9 @@ k_1 & k_2 & p_1 & p_2 & k_3
 \end{pmatrix}
 $$
     - $$k_i$$ values correspond to radial distortion and $$p_i$$ values correspond to tangential distortion (for the so-call *radial-tangential* distortion model)
-- $$\textbf{W}$$ --- the **per-view set of transforms** (also called **extrinsic** parameters) from target to camera, which is a list of N 4x4 matrices
-    - $$\textbf{W} = [W_1, W_2, ..., W_n]$$, where $$W_i$$ is the $$i$$-th **rigid-body transform** from *world* to *camera*, which is also the **pose** of the *world* in *camera* coordinates. (See the [$$\S$$Appendix](#appendix) for more discussion on convention).
+- $$\textbf{W}$$ --- the **per-view set of transforms** (also called **extrinsic** parameters) from world to camera, which is a list of N 4x4 matrices
+    - $$\textbf{W} = [W_1, W_2, ..., W_n]$$, where $$W_i$$ is the $$i$$-th **rigid-body transform** from *world* to *camera*, which is also the **pose** of the *world* in *camera* coordinates
+    - Here, and in other literature, the coordinate frame of the *calibration board* is called the *world* coordinate frame. All of these coordinate frames are equivalent in this post: **world** $$=$$ **target** $=$ **calibration board**
 
 
 # Projection: from 3D world point to 2D image point
@@ -87,7 +89,7 @@ A quick summary of the journey:
 3. Distort the normalized 2D points by the distortion model and parameters $$\textbf{k}$$.
 4. Project the distorted-normalized points into the 2D image coordinates with the intrinsic matrix $$\textbf{A}$$.
 
-We'll call each step Proj.\<N\> to disambiguate with the steps of Zhang's method later on.
+We'll call each step Proj.\<N\> to disambiguate with the steps of Zhang's method in part 2.
 
 
 ## Proj.1) Use $$\textbf{W}$$: 3D world point to 3D camera point
@@ -187,7 +189,7 @@ $$
 - $$hom^{-1}(\cdot)$$ --- the function which maps a homogeneous coordinate to its unhomogeneous equivalent point (divide the vector by its last value, then drop the trailing 1)
 - $$\Pi$$ --- the 'standard projection matrix' which reduces the dimensionality
 
-In other literature, it's common to express the projection of a 3D point in camera onto the normalized image plane by simply dividing the point in camera coordinates by it's $$z$$ component and drop the 4th dimension.
+In other literature, it's common to express the projection of a 3D point in camera onto the normalized image plane by simply dividing the point in camera coordinates by it's $$z$$ component and dropping the $$z$$ term:
 
 $$
 \begin{pmatrix}
@@ -201,7 +203,7 @@ y_c/z_c\\
 \end{pmatrix}
 $$
 
-However, I prefer the matrix multiplication and $$hom^{-1}(\cdot)$$ presented previously for continuity of equations.
+But I prefer the matrix multiplication and $$hom^{-1}(\cdot)$$ presented previously for continuity of equations.
 
 ## Proj.3) Use $$\textbf{k}$$: 2D normalized point to 2D distorted-normalized point
 
@@ -209,7 +211,7 @@ However, I prefer the matrix multiplication and $$hom^{-1}(\cdot)$$ presented pr
 {: centeralign }
 
 This step accounts for lens distortion by applying a non-linear warping function in normalized image coordinates.
-I chose to awkwardly call the resulting point a 'distorted-normalized' point since it's still in the normalized space, but has had a distortion applied to it.
+We'll call the resulting point a 'distorted-normalized' point since it's still in the normalized space, but has had lens distortion applied to it.
 
 $$
 \begin{equation}
@@ -268,7 +270,7 @@ Here we use the popular **radial-tangential** distortion model (also called the 
 {: centeralign }
 
 At last, we can project the distorted rays of light into our image plane.
-Points in image coordinates $$u_{ij}$$ are in units of pixels, with the origin starting in the top-left of the image.
+Points in the image plane have coordinates $$u_{ij}$$ and are in units of pixels, with the origin starting in the top-left of the image.
 The value $$u$$ increases from left-to-right, and $$v$$ increases from top-to-bottom of the image.
 
 $$
@@ -342,7 +344,7 @@ $$
 
 We've now defined a basis for **predicting** where a point will be in our image provided we have a known target point $${}^wX_{ij}$$ and values for the calibration parameters $$\textbf{A}, \textbf{k}, W_i$$.
 
-But how do we **measure** (or **detect**) the 2D points from the `.png`s or `.jpeg`s in our dataset?
+But how do we **measure** (or **detect**) the 2D points from the images in our dataset?
 
 
 # Aside: detecting target points in 2D images
@@ -357,15 +359,12 @@ Such libraries typically detect strong corners made unique by specific neighbori
 The corners of the larger checkerboard are the points which are detected ([OpenCV.org](https://docs.opencv.org/3.4/df/d4a/tutorial_charuco_detection.html)).
 {: centeralign }
 
-And with that, we're ready to talk about **projection error**!
-
-![](https://media1.giphy.com/media/NsIwMll0rhfgpdQlzn/giphy.gif)
-{: centeralign }
+And with that, we're ready to talk about **projection error** (sometimes called **reprojection error**).
 
 
-# Projection error: the metric of calibration 'goodness'
+# (Re)projection error: the metric of calibration 'goodness'
 
-In order to compute camera parameters which are useful for spatial reasoning, we need to define what makes a set of parameters better than another set.
+In order to compute camera parameters which are useful for spatial reasoning, we need to define what makes one set of parameters better than another set.
 This is typically done by computing **sum-squared projection error**, $$E$$.
 The lower that error metric is, the more closely our camera parameters fit the measurements from the input images.
 - From each image, we have the detected marker points. Each marker point is a single **2D measurement**, which we denote as $$z_{ij}$$ for the $$j$$-th measured point of the $$i$$-th image.
@@ -386,48 +385,28 @@ $$|| \cdot ||$$
 $$
 \begin{equation}
 E = \sum\limits_{i}^{n} \sum\limits_{j}^{m} || z_{ij} - u_{ij} ||^2
-\tag{6.a}\label{eq:6.a}
+\tag{6}\label{eq:6}
 \end{equation}
 $$
 
-Substituting the definition of predicted position $$u_{ij}$$ from (5):
+where the Euclidean distance between vectors $$p$$ and $$q$$ (each of length $$l$$) is a scalar value defined as:
 
 $$
 \begin{equation}
-E
-=
-\sum\limits_{i}^{n} \sum\limits_{j}^{m}
-
-||
-z_{ij}
--
-hom^{-1}
-(
-    \textbf{A}
-    \cdot
-    hom(
-        distort(
-            hom^{-1}(
-                \Pi \cdot W_i \cdot {}^wX_{ij}
-            ),
-            \textbf{k}
-        )
-    )
-)
-||^2
-\tag{6.b}\label{eq:6.b}
+|| p - q || = \sqrt{\sum\limits_{k}^{l} (p_k - q_k)^2}
+\tag{7}\label{eq:7}
 \end{equation}
 $$
 
-Now we've got a way to compute how closely our calibration parameters and measurements match.
-But how do we compute these calibration parameters?
-Should we just guess?
+Now we have a way to compute how closely our calibration parameters and measurements match --- the 'goodness' of the calibration.
+But *how do we get values* for these calibration parameters?
 
 
 # Up next...
 
-In part 2 of this post we'll get into Zhang's method, currently the most popular way to calibrate cameras due to it's accessibility and accuracy.
+In part 2 of this post we'll get into **Zhang's method**, currently the most popular way to calibrate cameras due to it's **accessibility** and **accuracy**.
 It requires only a planar calibration target which can be made with any desktop printer.
 
-Part 2 will be linked here after it's been posted! Thanks so much for reading.
+Special thanks to my co-worker [@RajRavi](https://www.linkedin.com/in/rajashree-ravi/) for feedback on this post.
+Part 2 will be linked here after it's been posted, thanks so much for reading!
 
