@@ -404,9 +404,8 @@ But *how do we get values* for these calibration parameters?
 
 # Up next...
 
-In part 2 of this post we'll get into **Zhang's method**, currently the most popular way to calibrate cameras due to it's **accessibility** and **accuracy**.
+In [Part 2]({% post_url 2022-04-03-camera-calibration-2 %}) of this post we'll get into **Zhang's method**, currently the most popular way to calibrate cameras due to it's **accessibility** and **accuracy**.
 It requires only a planar calibration target which can be made with any desktop printer.
 
 Special thanks to my co-worker [@RajRavi](https://www.linkedin.com/in/rajashree-ravi/) for feedback on this post.
-Part 2 will be linked here after it's been posted, thanks so much for reading!
 
