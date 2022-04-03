@@ -12,7 +12,8 @@ tags: [camera,calibration,intrinsic,extrinsic,optimization,levenberg-marquardt]
 School of Athens by Raphael ([Musei Vaticani](https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/stanze-di-raffaello/stanza-della-segnatura/scuola-di-atene.html)).
 {: centeralign }
 
-Previously in [Primer on camera calibration, part 1]({% post_url 2022-03-27-camera-calibration-1 %}), we focuses on defining calibration parameters and defining projection error.
+Previously in [Part 1]({% post_url 2022-03-27-camera-calibration-1 %}), we focuses on defining calibration parameters and defining projection error.
+We now move on to how to estimate and refine these calibration parameters to minimize projection error.
 
 Table of Contents:
 * TOC
@@ -221,50 +222,6 @@ Thanks for reading!
 
 
 # Appendix
-
-
-### Rigid-body transformations
-
-Recall we defined $$\textbf{W} = [W_1, W_2, ..., W_n]$$, where $$W_i$$ is the $$i$$-th **rigid-body transform** from *world* to *camera*, which is also the **pose** of the *world* in *camera* coordinates.
-
-This can also be written in what I've been told is the 'Craig convention': $$\textbf{W} = [{}^cM_{w,1}, {}^cM_{w,2}, ..., {}^cM_{w,N}]$$, where $${}^cM_{w,i}$$ is the $$i$$-th **rigid-body transform** from  *world* to *camera*, which is also the **pose** of the *world* in *camera* coordinates
-
-Each transform expressed in homogeneous form:
-
-$$
-{}^cM_{w}
-=
-\begin{pmatrix}
-|     & |     & |     & t_x\\
-r_{x} & r_{y} & r_{z} & t_y\\
-|     & |     & |     & t_z\\
-0 & 0 & 0 & 1\\
-\end{pmatrix}
-$$
-
-- $$t_x, t_y, t_z$$ are the world coordinate system's **origin** given *in the camera's coordinates*
-- $$r_x$$ (3x1 column vector) is the **normalized direction vector** of the world coordinate system's x-axis given *in the camera's coordinates* ($$r_y$$, $$r_z$$ follow this pattern)
-
-Notational example of transforming a single, homogeneous 3D point: \
-$${}^cP = {}^cM_{w} \cdot {}^wP$$, with $$P \in \mathbb{R^3}$$ and $${}^cM_{w} \in SE(3)$$
-
-- $${}^cP$$ --- homogeneous point $$P$$ in camera coordinates,
-$$
-\begin{pmatrix}
-x_c & y_c & z_c & 1
-\end{pmatrix}
-^\top$$
-
-- $${}^wP$$ --- homogeneous point $$P$$ in world coordinates,
-$$
-\begin{pmatrix}
-x_w & y_w & z_w & 1
-\end{pmatrix}
-^\top$$
-
-- $$\mathbb{R^3}$$ --- the space of real, 3 dimensional numbers
-- $$SE(3)$$ --- $$S$$pecial $$E$$uclidean group 3, the space of 3D rigid-body transformations
-
 
 ### Singular Value Decomposition (SVD)
 

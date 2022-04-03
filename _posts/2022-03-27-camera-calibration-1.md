@@ -74,7 +74,7 @@ k_1 & k_2 & p_1 & p_2 & k_3
 $$
     - $$k_i$$ values correspond to radial distortion and $$p_i$$ values correspond to tangential distortion (for the so-call *radial-tangential* distortion model)
 - $$\textbf{W}$$ --- the **per-view set of transforms** (also called **extrinsic** parameters) from world to camera, which is a list of N 4x4 matrices
-    - $$\textbf{W} = [W_1, W_2, ..., W_n]$$, where $$W_i$$ is the $$i$$-th **rigid-body transform** from *world* to *camera*, which is also the **pose** of the *world* in *camera* coordinates
+    - $$\textbf{W} = [W_1, W_2, ..., W_n]$$, where $$W_i$$ is the $$i$$-th **rigid-body transform** from *world* to *camera*, which is also the **pose** of the *world* in *camera* coordinates (see the [$$\S$$appendix](#appendix) for more discussion on convention)
     - Here, and in other literature, the coordinate frame of the *calibration board* is called the *world* coordinate frame. All of these coordinate frames are equivalent in this post: **world** $$=$$ **target** $=$ **calibration board**
 
 
@@ -408,4 +408,55 @@ In [Part 2]({% post_url 2022-04-03-camera-calibration-2 %}) of this post we'll g
 It requires only a planar calibration target which can be made with any desktop printer.
 
 Special thanks to my co-worker [@RajRavi](https://www.linkedin.com/in/rajashree-ravi/) for feedback on this post.
+
+
+# Appendix
+
+### Rigid-body transformations
+
+Recall we defined $$\textbf{W} = [W_1, W_2, ..., W_n]$$, where $$W_i$$ is the $$i$$-th **rigid-body transform** from *world* to *camera*, which is also the **pose** of the *world* in *camera* coordinates.
+
+This can also be written in what I've been told is the 'Craig convention': $$\textbf{W} = [{}^cM_{w,1}, {}^cM_{w,2}, ..., {}^cM_{w,N}]$$, where $${}^cM_{w,i}$$ is the $$i$$-th **rigid-body transform** from  *world* to *camera*, which is also the **pose** of the *world* in *camera* coordinates.
+
+Each transform expressed in homogeneous form:
+
+$$
+{}^cM_{w}
+=
+\begin{pmatrix}
+|     & |     & |     & t_x\\
+r_{x} & r_{y} & r_{z} & t_y\\
+|     & |     & |     & t_z\\
+0 & 0 & 0 & 1\\
+\end{pmatrix}
+$$
+
+- $$t_x, t_y, t_z$$ are the world coordinate system's **origin** given *in the camera's coordinates*
+- $$r_x$$ (3x1 column vector) is the **normalized direction vector** of the world coordinate system's x-axis given *in the camera's coordinates* ($$r_y$$, $$r_z$$ follow this pattern)
+
+Notational example of transforming a single, homogeneous 3D point:
+
+$${}^cP = {}^cM_{w} \cdot {}^wP$$
+
+$$P \in \mathbb{R^3}$$
+
+$${}^cM_{w} \in SE(3)$$
+
+- $${}^cP$$ --- homogeneous point $$P$$ in camera coordinates,
+$$
+\begin{pmatrix}
+x_c & y_c & z_c & 1
+\end{pmatrix}
+^\top$$
+
+- $${}^wP$$ --- homogeneous point $$P$$ in world coordinates,
+$$
+\begin{pmatrix}
+x_w & y_w & z_w & 1
+\end{pmatrix}
+^\top$$
+
+- $$\mathbb{R^3}$$ --- the space of real, 3 dimensional numbers
+- $$SE(3)$$ --- $$S$$pecial $$E$$uclidean group 3, the space of 3D rigid-body transformations
+
 
