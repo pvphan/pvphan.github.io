@@ -3,9 +3,18 @@ layout: post
 title: "Primer on camera calibration, part 2/2"
 author: "Paul Vinh Phan"
 categories: journal
-image: thedraughtsmanofthelute.jpeg
+image: schoolofathens.jpeg
 tags: [camera,calibration,intrinsic,extrinsic,optimization,levenberg-marquardt]
 ---
+
+{:centeralign: style="text-align: center;"}
+
+School of Athens by Raphael ([Musei Vaticani](https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/stanze-di-raffaello/stanza-della-segnatura/scuola-di-atene.html)).
+{: centeralign }
+
+Table of Contents:
+* TOC
+{:toc}
 
 
 # What is 'Zhang's method'?
@@ -206,7 +215,6 @@ This gif plays through the iterative refinement of the camera parameters (step #
 In my experience, camera calibration can be daunting due to assumed knowledge in several areas (camera projection models, linear algebra, optimization) and how those areas intersect.
 We walked through a common camera projection model and then stepped through Zhang's method, introducing numerical methods as needed.
 
-I hope this post has demystified `cv2.calibrateCamera()` a little bit.
 Thanks for reading!
 
 
