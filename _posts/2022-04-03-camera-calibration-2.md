@@ -12,7 +12,7 @@ tags: [camera,calibration,intrinsic,extrinsic,optimization,levenberg-marquardt]
 School of Athens by Raphael ([Musei Vaticani](https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/stanze-di-raffaello/stanza-della-segnatura/scuola-di-atene.html)).
 {: centeralign }
 
-Previously in [Part 1]({% post_url 2022-03-27-camera-calibration-1 %}), we focuses on defining calibration parameters and defining projection error.
+In [Part 1]({% post_url 2022-03-27-camera-calibration-1 %}), we defined the calibration parameters $$\textbf{A}, \textbf{k}, \textbf{W}$$ and sum-squared projection error, $$E$$.
 We now move on to how to estimate and refine these calibration parameters to minimize projection error.
 
 Table of Contents:

@@ -47,7 +47,7 @@ So, given multiple images of a known calibration target, camera calibration comp
 And with these parameters, we can **reason spatially** about the world from images!
 
 
-# Camera parameters
+# Camera parameters: A, k, W
 
 You'll have to bear with these largely unmotivated definitions for a moment.
 I wanted them laid out plainly here in one spot, and their use will be explained in the next section on [$$\S$$projection](#projection-from-3d-world-point-to-2d-image-point).
@@ -362,7 +362,7 @@ The corners of the larger checkerboard are the points which are detected ([OpenC
 And with that, we're ready to talk about **projection error** (sometimes called **reprojection error**).
 
 
-# (Re)projection error: the metric of calibration 'goodness'
+# (Re)projection error: E
 
 In order to compute camera parameters which are useful for spatial reasoning, we need to define what makes one set of parameters better than another set.
 This is typically done by computing **sum-squared projection error**, $$E$$.
