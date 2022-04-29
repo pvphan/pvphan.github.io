@@ -54,11 +54,14 @@ Trick #1 simplifies our projection equation (5) to a distortion-less [**pinhole 
 
 $$
 \begin{equation}
-s \cdot u_{ij}
+u_{ij}
 =
+hom^{-1}
+(
 \textbf{A}
 \cdot
 \Pi \cdot W_i \cdot {}^wX_{ij}
+)
 \tag{7.a}\label{eq:7.a}
 \end{equation}
 $$
@@ -67,7 +70,6 @@ And after expanding, trick #2 allows us to drop some dimensions from this expres
 
 $$
 \begin{equation}
-s
 \begin{pmatrix}
 u\\
 v\\
@@ -75,6 +77,8 @@ v\\
 \end{pmatrix}
 _{ij}
 =
+hom^{-1}
+\left(
 \textbf{A}
 \cdot
 \begin{pmatrix}
@@ -96,13 +100,17 @@ y_w\\
 1\\
 \end{pmatrix}
 _{ij}
+\right)
 \tag{7.b}\label{eq:7.b}
 \end{equation}
 $$
 
+Now we can strike out the 3rd column of $$W_i$$ and 3rd row of $${}^wX_{ij}$$, and rewrite the $$hom^{-1}(\cdot)$$ as a scale factor $$s$$.
+We'll call the product of $$\textbf{A}$$ and that 3-by-3 matrix our
+
 $$
-s
 \begin{equation}
+s
 \begin{pmatrix}
 u\\
 v\\
@@ -130,7 +138,7 @@ _{ij}
 \end{equation}
 $$
 
-We've now arrived at an expression for our homography $$H_i$$ which relates a 2D point on the target plane to a 2D point on our image plane for the $$i$$-th view:
+We've now arrived at an expression for our homography $$H_i$$ which relates a 2D point on the target plane to a 2D point on our image plane for the $$i$$-th view. We'll also introduce a change in notation for the homogeneous image point which we'll need to solve for $$H_i$$:
 
 $$
 \begin{equation}
@@ -142,6 +150,12 @@ v\\
 \end{pmatrix}
 _{ij}
 =
+\begin{pmatrix}
+\hat{u}\\
+\hat{v}\\
+\hat{w}\\
+\end{pmatrix}
+=
 H_i
 \begin{pmatrix}
 x_w\\
@@ -152,6 +166,64 @@ _j
 \tag{9}\label{eq:9}
 \end{equation}
 $$
+
+For readability, we'll assume the following equations refer to the $$i$$-th view and drop the $$i$$.
+To support a reformulation of (9), we define $$H$$ and $$\textbf{h}$$ as:
+
+$$
+\begin{equation}
+H
+=
+\begin{pmatrix}
+h_{11} & h_{12} & h_{13} \\
+h_{21} & h_{22} & h_{23} \\
+h_{31} & h_{32} & h_{33} \\
+\end{pmatrix}
+\tag{10}\label{eq:10}
+\end{equation}
+$$
+
+$$
+\begin{equation}
+\textbf{h}
+=
+\begin{pmatrix}
+h_{11} & h_{12} & h_{13} & \
+h_{21} & h_{22} & h_{23} & \
+h_{31} & h_{32} & h_{33}
+\end{pmatrix}
+^\top
+\tag{11}\label{eq:11}
+\end{equation}
+$$
+
+Now we'll reformulate (9) so that we can solve for the values of $$H$$.
+We desire an expression in terms of $$u$$, $$v$$, $$x_w$$, and $$y_w$$ (which are known) with respect to unknown values of $$\textbf{h}$$ (which we will solve for).
+We want this expression in homogeneous form $$M \cdot \textbf{h} = 0$$ so that we can apply Direct Linear Transformation (DLT).
+
+Relating the first and second terms from (9):
+
+$$
+\begin{equation}
+u = \frac{ \hat{u} }{ \hat{w} } \quad v = \frac{ \hat{v} }{ \hat{w} }
+\tag{12}\label{eq:12}
+\end{equation}
+$$
+
+And relating the second and third terms from (9) with the elements of $$H_i$$ distributed:
+
+$$
+\begin{equation}
+\begin{split}
+\hat{u} = h_{11} x_w + h_{12} y_w + h_{13} \\
+\hat{v} = h_{21} x_w + h_{22} y_w + h_{23} \\
+\hat{w} = h_{31} x_w + h_{32} y_w + h_{33} \\
+\end{split}
+\tag{13}\label{eq:13}
+\end{equation}
+$$
+
+We
 
 3. Normalize the input datasets
 
