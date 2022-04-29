@@ -13,7 +13,7 @@ School of Athens by Raphael ([Musei Vaticani](https://www.museivaticani.va/conte
 {: centeralign }
 
 In [Part 1]({% post_url 2022-03-27-camera-calibration-1 %}), we defined the calibration parameters $$\textbf{A}, \textbf{k}, \textbf{W}$$ and sum-squared projection error, $$E$$.
-We now move on to how to estimate and refine these calibration parameters to minimize projection error.
+We now move on to how to estimate and refine these calibration parameters so we can reason spatially with images.
 
 Table of Contents:
 * TOC
@@ -27,7 +27,7 @@ Older methods typically required a precisely made 3D calibration target or a mec
 In contrast, Zhang's method requires only a 2D calibration target and only loose requirements on how the camera or target moves.
 This means that anyone with a desktop printer and a little time can accurately calibrate their camera!
 
-The general strategy of Zhang's method is to impose naïve assumptions as constraints to get an **initial guess** of parameter values with singular value decomposition (SVD), then release those constraints and **refine** those guesses with non-linear least squares optimization.
+The general strategy of Zhang's method is to impose naïve assumptions as constraints to get an **initial guess** of calibration parameter values with singular value decomposition (SVD), then release those constraints and **refine** those guesses with non-linear least squares optimization.
 
 The ordering of steps for Zhang's method are:
 1. Use the 2D-3D point associations to compute an *initial guess* for the **intrinsic matrix**, $$A_{init}$$.
@@ -39,7 +39,7 @@ The ordering of steps for Zhang's method are:
 # The steps of Zhang's method
 
 Below, we'll be changing between vector/matrix formulations of equations and their scalar value forms.
-Though less compact, it's crucial so that we can rewrite the equations into ones that can be solved with powerful techniques like SVD or non-linear least squares optimization.
+The scalar value expansion of these equations are required so that we can reformulate these equations into ones that can be solved with powerful techniques like SVD or non-linear least squares optimization.
 
 ## Zhang.1) Compute initial intrinsic matrix, A
 
@@ -215,7 +215,8 @@ This gif plays through the iterative refinement of the camera parameters (step #
 
 # Final remarks
 
-In my experience, camera calibration can be daunting due to assumed knowledge in several areas (camera projection models, linear algebra, optimization) and how those areas intersect.
+In part 2, we went into the theory of Zhang's popular calibration method for computing intial values for $$\textbf{A}, \textbf{k}, \textbf{W}$$ and their refinement.
+Camera calibration can be daunting due to assumed knowledge in camera projection models, linear algebra, and optimization.
 We walked through a common camera projection model and then stepped through Zhang's method, introducing numerical methods as needed.
 
 Thanks for reading!
