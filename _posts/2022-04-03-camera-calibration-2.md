@@ -14,6 +14,7 @@ School of Athens by Raphael ([Musei Vaticani](https://www.museivaticani.va/conte
 
 In [Part 1]({% post_url 2022-03-27-camera-calibration-1 %}), we defined the calibration parameters $$\textbf{A}, \textbf{k}, \textbf{W}$$ and sum-squared projection error, $$E$$.
 We now move on to how to estimate and refine these calibration parameters so we can reason spatially with images.
+For a more complete walkthrough of each step of Zhang's method, here's a link to the [tutorial paper by Burger](https://www.researchgate.net/profile/Wilhelm-Burger/publication/303233579_Zhang's_Camera_Calibration_Algorithm_In-Depth_Tutorial_and_Implementation/links/5eaad8c9a6fdcc70509c3c9b/Zhangs-Camera-Calibration-Algorithm-In-Depth-Tutorial-and-Implementation.pdf) again.
 
 Table of Contents:
 * TOC
@@ -30,18 +31,18 @@ This means that anyone with a desktop printer and a little time can accurately c
 The general strategy of Zhang's method is to impose naïve assumptions as constraints to get an **initial guess** of calibration parameter values with singular value decomposition (SVD), then release those constraints and **refine** those guesses with non-linear least squares optimization.
 
 The ordering of steps for Zhang's method are:
-1. Use the 2D-3D point associations to compute an *initial guess* for the **intrinsic matrix**, $$A_{init}$$.
-2. Using the above, compute an *initial guess* for the **distortion parameters**, $$\textbf{k}_{init}$$.
-3. Using the above, compute an *initial guess* **camera pose** (per-view) in target coordinates, $$\textbf{W}_{init}$$.
-4. Initialize **non-linear optimization** with the *initial guesses* above and then **iterate** to minimize **projection error**, producing $$A_{final}$$, $$\textbf{k}_{final}$$, and $$\textbf{W}_{final}$$.
+1. Use the 2D-3D point associations to compute the per-view set of homographies $$\textbf{H}$$.
+2. Use the homographies $$\textbf{H}$$ to compute an *initial guess* for the **intrinsic matrix**, $$A_{init}$$.
+3. Using the above, compute an *initial guess* for the **distortion parameters**, $$\textbf{k}_{init}$$.
+4. Using the above, compute an *initial guess* **camera pose** (per-view) in target coordinates, $$\textbf{W}_{init}$$.
+5. Initialize **non-linear optimization** with the *initial guesses* above and then **iterate** to minimize **projection error**, producing $$A_{final}$$, $$\textbf{k}_{final}$$, and $$\textbf{W}_{final}$$.
 
 
 # The steps of Zhang's method
 
-Below, we'll be changing between vector/matrix formulations of equations and their scalar value forms.
-The scalar value expansion of these equations are required so that we can reformulate these equations into ones that can be solved with powerful techniques like SVD or non-linear least squares optimization.
+## Zhang.1) Homography estimation using Direct Linear Transformation (DLT)
 
-## Zhang.1) Compute initial intrinsic matrix, A
+Compute initial intrinsic matrix, A
 
 First, we need to use the 2D-3D point associations to compute the homographies $$\textbf{H} = [H_1, H_2, ..., H_n]$$, for each of the $$n$$ views in the dataset.
 
@@ -208,8 +209,12 @@ Relating the first and second terms from (9), we can rewrite them as a pair of h
 
 $$
 \begin{equation}
+\left\{
+\begin{aligned}
 u \hat{w} - \hat{u} = 0 \\
 v \hat{w} - \hat{v} = 0
+
+\end{aligned} \right.
 \tag{12}\label{eq:12}
 \end{equation}
 $$
@@ -219,9 +224,11 @@ And relating the second and third terms from (9) with the elements of $$H_i$$ di
 $$
 \begin{equation}
 \begin{split}
+
 \hat{u} = h_{11} x_w + h_{12} y_w + h_{13} \\
 \hat{v} = h_{21} x_w + h_{22} y_w + h_{23} \\
 \hat{w} = h_{31} x_w + h_{32} y_w + h_{33} \\
+
 \end{split}
 \tag{13}\label{eq:13}
 \end{equation}
@@ -229,45 +236,21 @@ $$
 
 ### Solve for H using SVD
 
-### Python example
+For a Python example of this, you can look at [linearcalibrate.py: estimateHomography](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L24).
 
 
-```python
-def estimateHomography(Xa: np.ndarray, Xb: np.ndarray):
-    """
-    Estimate homography using DLT
-    Inputs:
-        Xa -- 2D points in sensor
-        Xb -- 2D model points
-    Output:
-        aHb -- homography matrix which relates Xa and Xb
-    Rearrange into the formulation:
-        M * h = 0
-    M represents the model and sensor point correspondences
-    h is a vector representation of the homography aHb we are trying to find:
-        h = (h11, h12, h13, h21, h22, h23, h31, h32, h33).T
-    """
-    N = Xa.shape[0]
-    M = np.zeros((2*N, 9))
-    for i in range(N):
-        ui, vi = Xa[i][:2]
-        Xi, Yi = Xb[i][:2]
-        M[2*i,:]   = (-Xi, -Yi, -1,   0,   0,  0, ui * Xi, ui * Yi, ui)
-        M[2*i+1,:] = (  0,   0,  0, -Xi, -Yi, -1, vi * Xi, vi * Yi, vi)
-    U, S, V_T = np.linalg.svd(M)
-    h = V_T[-1]
-    Hp = h.reshape(3,3)
-    aHb = Hp / Hp[2,2]
-    return aHb
-```
+## Zhang.2) Compute initial intrinsic matrix, A
 
-## Zhang.2) Compute initial distortion vector, k
+For a Python example of this, you can look at [linearcalibrate.py: computeIntrinsicMatrix](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L93).
 
 
-## Zhang.3) Compute initial extrinsic parameters, W
+## Zhang.3) Compute initial distortion vector, k
 
 
-## Zhang.4) Refine A, k, W using non-linear optimization
+## Zhang.4) Compute initial extrinsic parameters, W
+
+
+## Zhang.5) Refine A, k, W using non-linear optimization
 
 Until now, we've been estimating $$\textbf{A}, \textbf{k}, \textbf{W}$$ to get a good initialization point for our optimization.
 In non-linear optimization, it's often impossible to arrive at a good solution unless the initialization point for the variables was at least somewhat reasonable.
