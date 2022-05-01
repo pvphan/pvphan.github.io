@@ -167,6 +167,8 @@ _j
 \end{equation}
 $$
 
+Next, we'll use the Direct Linear Transformation (DLT) technique to rewrite this expression in homogeneous form $$M \cdot \textbf{h} = 0$$.
+After that, we can apply Singular Value Decomposition (SVD) to solve for $$\textbf{h}$$, and then reshape it into $$H$$.
 For readability, we'll assume the following equations refer to the $$i$$-th view and drop the $$i$$.
 To support a reformulation of (9), we define $$H$$ and $$\textbf{h}$$ as:
 
@@ -197,15 +199,17 @@ h_{31} & h_{32} & h_{33}
 \end{equation}
 $$
 
+### Reformulate using DLT
+
 Now we'll reformulate (9) so that we can solve for the values of $$H$$.
 We desire an expression in terms of $$u$$, $$v$$, $$x_w$$, and $$y_w$$ (which are known) with respect to unknown values of $$\textbf{h}$$ (which we will solve for).
-We want this expression in homogeneous form $$M \cdot \textbf{h} = 0$$ so that we can apply Direct Linear Transformation (DLT).
 
-Relating the first and second terms from (9):
+Relating the first and second terms from (9), we can rewrite them as a pair of homogeneous equations. Note that $$s = \hat{w}$$:
 
 $$
 \begin{equation}
-u = \frac{ \hat{u} }{ \hat{w} } \quad v = \frac{ \hat{v} }{ \hat{w} }
+u \hat{w} - \hat{u} = 0 \\
+v \hat{w} - \hat{v} = 0
 \tag{12}\label{eq:12}
 \end{equation}
 $$
@@ -223,9 +227,10 @@ $$
 \end{equation}
 $$
 
-We
+### Solve for H using SVD
 
-3. Normalize the input datasets
+### Python example
+
 
 ```python
 def estimateHomography(Xa: np.ndarray, Xb: np.ndarray):
