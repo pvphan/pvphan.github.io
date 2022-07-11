@@ -165,7 +165,7 @@ y\\
 _{ij}
 =
 hom^{-1}
-\begin{pmatrix}
+\left(
 \begin{pmatrix}
 1 & 0 & 0 & 0\\
 0 & 1 & 0 & 0\\
@@ -178,7 +178,7 @@ z_c\\
 1\\
 \end{pmatrix}
 _{ij}
-\end{pmatrix}
+\right)
 \tag{2.b}\label{eq:2.b}
 \end{equation}
 $$
@@ -289,7 +289,7 @@ v\\
 _{ij}
 =
 hom^{-1}
-\begin{pmatrix}
+\left(
 \begin{pmatrix}
 \alpha & \gamma & u_0\\
 0 & \beta & v_0\\
@@ -301,7 +301,7 @@ hom^{-1}
 1\\
 \end{pmatrix}
 _{ij}
-\end{pmatrix}
+\right)
 \tag{4.b}\label{eq:4.b}
 \end{equation}
 $$
