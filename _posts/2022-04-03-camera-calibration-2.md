@@ -13,7 +13,7 @@ School of Athens by Raphael ([Musei Vaticani](https://www.museivaticani.va/conte
 {: centeralign }
 
 In [Part 1]({% post_url 2022-03-27-camera-calibration-1 %}), we defined the calibration parameters $$\textbf{A}, \textbf{k}, \textbf{W}$$ and sum-squared projection error, $$E$$.
-We now move on to how to estimate and refine these calibration parameters to minimize projection error.
+We now move on to how to estimate and refine these calibration parameters.
 
 Table of Contents:
 * TOC
