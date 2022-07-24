@@ -47,8 +47,10 @@ The ordering of steps for Zhang's method are:
 
 ### Relate world points to image points as homographies, $$H_i$$
 
-We need to use the 2D-3D point associations to compute the homographies $$\textbf{H} = [H_1, H_2, ..., H_n]$$, for each of the $$n$$ views in the dataset.
+A homography relates a plane in 3D space to another plane in 3D space.
+In our case, we care about the relation between the calibration board plane and the cameras sensor plane (assuming no lens distortion).
 
+We will use the 2D-3D point associations to compute the homographies $$\textbf{H} = [H_1, H_2, ..., H_n]$$, for each of the $$n$$ views in the dataset.
 To do this we employ two tricks:
 - Trick #1: Assume there is **no distortion** in the camera (7.a). This is of course not typically true, but it will let us compute approximate values to refine later.
 - Trick #2: We define the world coordinate system so that it's $$z = 0$$ plane is the **plane of the calibration target**.
@@ -142,7 +144,6 @@ _{ij}
 \end{equation}
 $$
 
-We've now arrived at an expression for our homography $$H_i$$ which relates a 2D point on the target plane to a 2D point on our image plane for the $$i$$-th view.
 We'll also shorthand the non-homogenous projected points $$s \cdot u$$ to $$\hat{u}$$, etc.
 
 $$
@@ -184,6 +185,8 @@ _j
 \tag{9.b}\label{eq:9.b}
 \end{equation}
 $$
+
+We've now arrived at an expression for our homography $$H_i$$ which relates a 2D point on the target plane to a (non-homogeneous) 2D point on our image plane for the $$i$$-th view.
 
 
 ### Reformulate using DLT
