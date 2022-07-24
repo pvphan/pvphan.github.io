@@ -12,13 +12,16 @@ tags: [camera,calibration,intrinsic,extrinsic,optimization,levenberg-marquardt]
 School of Athens by Raphael ([Musei Vaticani](https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/stanze-di-raffaello/stanza-della-segnatura/scuola-di-atene.html)).
 {: centeralign }
 
-In [Part 1]({% post_url 2022-03-27-camera-calibration-1 %}), we defined the calibration parameters $$\textbf{A}, \textbf{k}, \textbf{W}$$ and sum-squared projection error, $$E$$.
-We now move on to how to estimate and refine these calibration parameters so we can reason spatially with images.
-For a more complete walkthrough of each step of Zhang's method, here's a link to the [tutorial paper by Burger](https://www.researchgate.net/profile/Wilhelm-Burger/publication/303233579_Zhang's_Camera_Calibration_Algorithm_In-Depth_Tutorial_and_Implementation/links/5eaad8c9a6fdcc70509c3c9b/Zhangs-Camera-Calibration-Algorithm-In-Depth-Tutorial-and-Implementation.pdf) again.
-
 Table of Contents:
 * TOC
 {:toc}
+
+
+# Intro
+
+In [Part 1]({% post_url 2022-03-27-camera-calibration-1 %}), we defined the calibration parameters $$\textbf{A}, \textbf{k}, \textbf{W}$$ and sum-squared projection error, $$E$$.
+We now move on to how to **estimate and refine** these calibration parameters so we can reason spatially with images.
+For a more complete walkthrough of each step of Zhang's method, here's a link to the [tutorial paper by Burger](https://www.researchgate.net/profile/Wilhelm-Burger/publication/303233579_Zhang's_Camera_Calibration_Algorithm_In-Depth_Tutorial_and_Implementation/links/5eaad8c9a6fdcc70509c3c9b/Zhangs-Camera-Calibration-Algorithm-In-Depth-Tutorial-and-Implementation.pdf) again.
 
 
 # What is 'Zhang's method'?
@@ -34,7 +37,7 @@ The ordering of steps for Zhang's method are:
 1. Use the 2D-3D point associations to compute the per-view set of homographies $$\textbf{H}$$.
 2. Use the homographies $$\textbf{H}$$ to compute an *initial guess* for the **intrinsic matrix**, $$A_{init}$$.
 3. Using the above, compute an *initial guess* for the **distortion parameters**, $$\textbf{k}_{init}$$.
-4. Using the above, compute an *initial guess* **camera pose** (per-view) in target coordinates, $$\textbf{W}_{init}$$.
+4. Using the above, compute an *initial guess* for the **camera pose** (per-view) in target coordinates, $$\textbf{W}_{init}$$.
 5. Initialize **non-linear optimization** with the *initial guesses* above and then **iterate** to minimize **projection error**, producing $$A_{final}$$, $$\textbf{k}_{final}$$, and $$\textbf{W}_{final}$$.
 
 
@@ -42,12 +45,12 @@ The ordering of steps for Zhang's method are:
 
 ## Zhang.1) Homography estimation using Direct Linear Transformation (DLT)
 
-Compute initial intrinsic matrix, A
+### Relate world points to image points as homographies, $$H_i$$
 
-First, we need to use the 2D-3D point associations to compute the homographies $$\textbf{H} = [H_1, H_2, ..., H_n]$$, for each of the $$n$$ views in the dataset.
+We need to use the 2D-3D point associations to compute the homographies $$\textbf{H} = [H_1, H_2, ..., H_n]$$, for each of the $$n$$ views in the dataset.
 
 To do this we employ two tricks:
-- Trick #1: Assume there is **no distortion** in the camera (7.a). This is of course not true, but it will let us compute approximate values.
+- Trick #1: Assume there is **no distortion** in the camera (7.a). This is of course not typically true, but it will let us compute approximate values to refine later.
 - Trick #2: We define the world coordinate system so that it's $$z = 0$$ plane is the **plane of the calibration target**.
 This allows us to drop the $$z$$ term of the 3D world points (7.b).
 
@@ -107,7 +110,7 @@ _{ij}
 $$
 
 Now we can strike out the 3rd column of $$W_i$$ and 3rd row of $${}^wX_{ij}$$, and rewrite the $$hom^{-1}(\cdot)$$ as a scale factor $$s$$.
-We'll call the product of $$\textbf{A}$$ and that 3-by-3 matrix our
+We'll call the product of $$\textbf{A}$$ and that 3-by-3 matrix our **homography**, $$H_i$$:
 
 $$
 \begin{equation}
@@ -139,7 +142,8 @@ _{ij}
 \end{equation}
 $$
 
-We've now arrived at an expression for our homography $$H_i$$ which relates a 2D point on the target plane to a 2D point on our image plane for the $$i$$-th view. We'll also introduce a change in notation for the homogeneous image point which we'll need to solve for $$H_i$$:
+We've now arrived at an expression for our homography $$H_i$$ which relates a 2D point on the target plane to a 2D point on our image plane for the $$i$$-th view.
+We'll also shorthand the non-homogenous projected points $$s \cdot u$$ to $$\hat{u}$$, etc.
 
 $$
 \begin{equation}
@@ -156,6 +160,19 @@ _{ij}
 \hat{v}\\
 \hat{w}\\
 \end{pmatrix}
+_{ij}
+\tag{9.a}\label{eq:9.a}
+\end{equation}
+$$
+
+$$
+\begin{equation}
+\begin{pmatrix}
+\hat{u}\\
+\hat{v}\\
+\hat{w}\\
+\end{pmatrix}
+_{ij}
 =
 H_i
 \begin{pmatrix}
@@ -164,48 +181,51 @@ y_w\\
 1\\
 \end{pmatrix}
 _j
-\tag{9}\label{eq:9}
+\tag{9.b}\label{eq:9.b}
 \end{equation}
 $$
 
+
+### Reformulate using DLT
+
 Next, we'll use the Direct Linear Transformation (DLT) technique to rewrite this expression in homogeneous form $$M \cdot \textbf{h} = 0$$.
 After that, we can apply Singular Value Decomposition (SVD) to solve for $$\textbf{h}$$, and then reshape it into $$H$$.
-For readability, we'll assume the following equations refer to the $$i$$-th view and drop the $$i$$.
-To support a reformulation of (9), we define $$H$$ and $$\textbf{h}$$ as:
+To support a reformulation of (9.b), we define $$H_i$$ and $$\textbf{h}_i$$ as:
 
 $$
 \begin{equation}
 H
+_{i}
 =
 \begin{pmatrix}
 h_{11} & h_{12} & h_{13} \\
 h_{21} & h_{22} & h_{23} \\
 h_{31} & h_{32} & h_{33} \\
 \end{pmatrix}
+_{i}
 \tag{10}\label{eq:10}
 \end{equation}
 $$
 
 $$
 \begin{equation}
-\textbf{h}
+\textbf{h}_i
 =
 \begin{pmatrix}
 h_{11} & h_{12} & h_{13} & \
 h_{21} & h_{22} & h_{23} & \
 h_{31} & h_{32} & h_{33}
 \end{pmatrix}
+_{i}
 ^\top
 \tag{11}\label{eq:11}
 \end{equation}
 $$
 
-### Reformulate using DLT
-
-Now we'll reformulate (9) so that we can solve for the values of $$H$$.
+Now we'll reformulate (9.b) so that we can solve for the values of $$H$$.
 We desire an expression in terms of $$u$$, $$v$$, $$x_w$$, and $$y_w$$ (which are known) with respect to unknown values of $$\textbf{h}$$ (which we will solve for).
 
-Relating the first and second terms from (9), we can rewrite them as a pair of homogeneous equations. Note that $$s = \hat{w}$$:
+Noting that $$s \equiv \hat{w}$$ in equation (9.a), we can rewrite it as a pair of homogeneous equations:
 
 $$
 \begin{equation}
@@ -219,7 +239,7 @@ v \hat{w} - \hat{v} = 0
 \end{equation}
 $$
 
-And relating the second and third terms from (9) with the elements of $$H_i$$ distributed:
+And relating the second and third terms from (9.b) with the elements of $$H_i$$ distributed:
 
 $$
 \begin{equation}
