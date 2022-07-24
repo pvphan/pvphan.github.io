@@ -20,7 +20,7 @@ Table of Contents:
 # Intro
 
 In [Part 1]({% post_url 2022-03-27-camera-calibration-1 %}), we defined the calibration parameters $$\textbf{A}, \textbf{k}, \textbf{W}$$ and sum-squared projection error, $$E$$.
-We now move on to how to **estimate and refine** these calibration parameters so we can reason spatially with images.
+We now move on to how to **estimate and refine** these calibration parameters so we can reason spatially with images from that camera.
 For a more complete walkthrough of each step of Zhang's method, here's a link to the [tutorial paper by Burger](https://www.researchgate.net/profile/Wilhelm-Burger/publication/303233579_Zhang's_Camera_Calibration_Algorithm_In-Depth_Tutorial_and_Implementation/links/5eaad8c9a6fdcc70509c3c9b/Zhangs-Camera-Calibration-Algorithm-In-Depth-Tutorial-and-Implementation.pdf) again.
 
 
@@ -279,7 +279,7 @@ In non-linear optimization, it's often impossible to arrive at a good solution u
 1. Take the partial derivatives of the projection expression with respect to the calibration parameters.
 1. Arrange these partial derivative expressions into the Jacobian matrix $$J$$ for the projection expression.
 
-Now we are ready to run our non-linear optimization algorithm. Levenberg-Marquardt is a popular choice as it works well in practice.
+Now we are ready to run our non-linear optimization algorithm, which in this case is Levenberg-Marquardt (see [$$\S$$Appendix](#non-linear-least-squares-optimization-levenberg-marquardt) for more).
 
 1. Start by setting the *current* calibration parameters $$\textbf{P}_{curr}$$ to the initial guess values computed in Zhang.1 - Zhang.3.
 1. Use $$\textbf{P}_{curr}$$ to project the input world points $${}^wX_{ij}$$ to thier image coordinates $$u_{ij}$$
@@ -311,7 +311,7 @@ The properties of the resulting three matrices are like that of Eigenvalue and E
 
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Singular_value_decomposition_visualisation.svg/206px-Singular_value_decomposition_visualisation.svg.png)
 {: centeralign }
-Visualization of SVD from Wikipedia.
+Visualization of SVD from [Wikipedia](https://en.wikipedia.org/wiki/Singular_value_decomposition).
 {: centeralign }
 
 The properties of this decomposition have many uses, one of which is **solving homogeneous linear systems** of the form
@@ -334,13 +334,15 @@ Additional links:
 ### Non-linear least squares optimization (Levenberg-Marquardt)
 
 Non-linear optimization is the task of computing a set of parameters which **minimizes a non-linear value function**.
-This is a huge topic of its own that I'm not quite ready to articulate.
-Maybe I'll do a post in the future and update this one with a link.
+For those unaware, this is it's own huge area of study which I'll just mention briefly here.
+
+Levenberg-Marquardt is often described as a 'damped' version of Gauss-Newton method.
+The visualization below gives an intuition for how the Gauss-Newton method works over 6 iterations where the red line is the non-linear value function which we are trying to minimize.
 
 ![](https://i.stack.imgur.com/gdJ3v.gif)
 {: centeralign }
 
-Visualization of Gauss-Newton optimization.
+Visualization of Gauss-Newton optimization ([source](https://www1.hft-leipzig.de/strutz/Animations/op.html)).
 {: centeralign }
 
 Additional links:
