@@ -257,14 +257,104 @@ $$
 \end{equation}
 $$
 
-### Solve for H using SVD
+Substituting (13) into (12) and reordering the terms by the elements of $$\textbf{h}_i$$, we get:
 
-For a Python example of this, you can look at [linearcalibrate.py: estimateHomography](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L24).
+$$
+\begin{equation}
+\left\{
+\begin{aligned}
+- h_{11} x_w - h_{12} y_w - h_{13} + u h_{31} x_w + u h_{32} y_w + u h_{33} = 0 \\
+- h_{21} x_w - h_{22} y_w - h_{23} + v h_{31} x_w + v h_{32} y_w + v h_{33} = 0
+\end{aligned} \right.
+\tag{14}\label{eq:14}
+\end{equation}
+$$
+
+Which for this pair of equations can be rewriten into matrix form as:
+
+$$
+\begin{equation}
+\begin{pmatrix}
+- x_w & - y_w & -1 &     0 &     0 &  0 & u x_w & u y_w & u \\
+    0 &     0 &  0 & - x_w & - y_w & -1 & v x_w & v y_w & v
+\end{pmatrix}
+_{ij}
+\begin{pmatrix}
+h_{11}\\
+h_{12}\\
+h_{13}\\
+h_{21}\\
+h_{22}\\
+h_{23}\\
+h_{31}\\
+h_{32}\\
+h_{33}\\
+\end{pmatrix}
+_{i}
+=
+\begin{pmatrix}
+0\\
+0\\
+\end{pmatrix}
+\tag{15}\label{eq:15}
+\end{equation}
+$$
+
+By iterating over each $j$-th point and stacking these pairs of equations, we create a matrix we'll call $$M$$ which relates each observed point in an image to it's position in world coordinates by the quantity $$\textbf{h}_i$$:
+
+$$
+\begin{equation}
+\begin{pmatrix}
+- x_w & - y_w & -1 &     0 &     0 &  0 & u x_w & u y_w & u \\
+    0 &     0 &  0 & - x_w & - y_w & -1 & v x_w & v y_w & v \\
+\end{pmatrix}
+_{i0}
+
+\begin{pmatrix}
+- x_w & - y_w & -1 &     0 &     0 &  0 & u x_w & u y_w & u \\
+    0 &     0 &  0 & - x_w & - y_w & -1 & v x_w & v y_w & v \\
+\end{pmatrix}
+_{i1}
+
+\begin{pmatrix}
+h_{11}\\
+h_{12}\\
+h_{13}\\
+h_{21}\\
+h_{22}\\
+h_{23}\\
+h_{31}\\
+h_{32}\\
+h_{33}\\
+\end{pmatrix}
+_{i}
+=
+\begin{pmatrix}
+0\\
+0\\
+\end{pmatrix}
+\tag{16}\label{eq:16}
+\end{equation}
+$$
+
+### Solve for $$h$$ in $$M \cdot h = 0$$ using SVD
+
+We've now got the values right where we want them in order to solve for $$h_i$$ using singular value decomposition (SVD).
+I'm not knowledgable enough in this area to give a satisfying explanation, so I'll instead provide some pointers to better SVD sources in the [$$\S$$Appendix: SVD](#singular-value-decomposition-svd) and provide a practical example calling SVD via a math library such as `numpy`:
+
+```python
+# M * h = 0, where M (m,n) is known and we want to solve for h (n,1)
+U, Σ, V_T = np.linalg.svd(M)
+# the solution, h, is the smallest eigenvector of V_T
+h = V_T[-1]
+```
+
+**Code**: For a Python example of the steps from Zhang.1, you can look at [linearcalibrate.py: estimateHomography](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L24).
 
 
 ## Zhang.2) Compute initial intrinsic matrix, A
 
-For a Python example of this, you can look at [linearcalibrate.py: computeIntrinsicMatrix](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L93).
+**Code**: For a Python example of this, you can look at [linearcalibrate.py: computeIntrinsicMatrix](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L93).
 
 
 ## Zhang.3) Compute initial distortion vector, k
@@ -282,15 +372,15 @@ In non-linear optimization, it's often impossible to arrive at a good solution u
 1. Take the partial derivatives of the projection expression with respect to the calibration parameters.
 1. Arrange these partial derivative expressions into the Jacobian matrix $$J$$ for the projection expression.
 
-Now we are ready to run our non-linear optimization algorithm, which in this case is Levenberg-Marquardt (see [$$\S$$Appendix](#non-linear-least-squares-optimization-levenberg-marquardt) for more).
+Now we are ready to run our non-linear optimization algorithm, which in this case is Levenberg-Marquardt (see [$$\S$$Appendix: Nonlinear least squares](#non-linear-least-squares-optimization-levenberg-marquardt) for more).
 
 1. Start by setting the *current* calibration parameters $$\textbf{P}_{curr}$$ to the initial guess values computed in Zhang.1 - Zhang.3.
 1. Use $$\textbf{P}_{curr}$$ to project the input world points $${}^wX_{ij}$$ to thier image coordinates $$u_{ij}$$
 1. Evaluate the Jacbobian $$J$$ for all input points at the *current* calibration parameter values.
 
 Below, green crosses are the measured 2D marker points and magenta crosses are the projection of the associated 3D points using the 'current' camera parameters.
-This gif plays through the iterative refinement of the camera parameters (step #5 of Zhang's method).
-(Generation of this gif is part of the github repo linked at the top of this post.)
+This gif plays through the iterative refinement of the camera parameters (step #5 of Zhang's method) for a synthetic example.
+(Generation of this gif from: [https://github.com/pvphan/camera-calibration](https://github.com/pvphan/camera-calibration).)
 
 ![](assets/img/reprojection.gif)
 {: centeralign }
