@@ -76,35 +76,35 @@ And after expanding, trick #2 allows us to drop some dimensions from this expres
 
 $$
 \begin{equation}
-\begin{pmatrix}
+\begin{bmatrix}
 u\\
 v\\
 1\\
-\end{pmatrix}
+\end{bmatrix}
 _{ij}
 =
 hom^{-1}
 \left(
 \textbf{A}
 \cdot
-\begin{pmatrix}
+\begin{bmatrix}
 1 & 0 & 0 & 0\\
 0 & 1 & 0 & 0\\
 0 & 0 & 1 & 0\\
-\end{pmatrix}
-\begin{pmatrix}
+\end{bmatrix}
+\begin{bmatrix}
 |     & |     & |     & t_x\\
 r_{x} & r_{y} & r_{z} & t_y\\
 |     & |     & |     & t_z\\
 0 & 0 & 0 & 1\\
-\end{pmatrix}
+\end{bmatrix}
 _{i}
-\begin{pmatrix}
+\begin{bmatrix}
 x_w\\
 y_w\\
 0\\
 1\\
-\end{pmatrix}
+\end{bmatrix}
 _{ij}
 \right)
 \tag{7.b}\label{eq:7.b}
@@ -117,28 +117,28 @@ We'll call the product of $$\textbf{A}$$ and that 3-by-3 matrix our **homography
 $$
 \begin{equation}
 s
-\begin{pmatrix}
+\begin{bmatrix}
 u\\
 v\\
 1\\
-\end{pmatrix}
+\end{bmatrix}
 _{ij}
 =
 \underbrace{
     \textbf{A}
     \cdot
-    \begin{pmatrix}
+    \begin{bmatrix}
     |     & |     & t_x\\
     r_{x} & r_{y} & t_y\\
     |     & |     & t_z\\
-    \end{pmatrix}
+    \end{bmatrix}
     _{i}
 }_{H_i}
-\begin{pmatrix}
+\begin{bmatrix}
 x_w\\
 y_w\\
 1\\
-\end{pmatrix}
+\end{bmatrix}
 _{ij}
 \tag{8}\label{eq:8}
 \end{equation}
@@ -149,18 +149,18 @@ We'll also shorthand the non-homogenous projected points $$s \cdot u$$ to $$\hat
 $$
 \begin{equation}
 s
-\begin{pmatrix}
+\begin{bmatrix}
 u\\
 v\\
 1\\
-\end{pmatrix}
+\end{bmatrix}
 _{ij}
 =
-\begin{pmatrix}
+\begin{bmatrix}
 \hat{u}\\
 \hat{v}\\
 \hat{w}\\
-\end{pmatrix}
+\end{bmatrix}
 _{ij}
 \tag{9.a}\label{eq:9.a}
 \end{equation}
@@ -168,19 +168,19 @@ $$
 
 $$
 \begin{equation}
-\begin{pmatrix}
+\begin{bmatrix}
 \hat{u}\\
 \hat{v}\\
 \hat{w}\\
-\end{pmatrix}
+\end{bmatrix}
 _{ij}
 =
 H_i
-\begin{pmatrix}
+\begin{bmatrix}
 x_w\\
 y_w\\
 1\\
-\end{pmatrix}
+\end{bmatrix}
 _j
 \tag{9.b}\label{eq:9.b}
 \end{equation}
@@ -200,11 +200,11 @@ $$
 H
 _{i}
 =
-\begin{pmatrix}
+\begin{bmatrix}
 h_{11} & h_{12} & h_{13} \\
 h_{21} & h_{22} & h_{23} \\
 h_{31} & h_{32} & h_{33} \\
-\end{pmatrix}
+\end{bmatrix}
 _{i}
 \tag{10}\label{eq:10}
 \end{equation}
@@ -214,11 +214,11 @@ $$
 \begin{equation}
 \textbf{h}_i
 =
-\begin{pmatrix}
+\begin{bmatrix}
 h_{11} & h_{12} & h_{13} & \
 h_{21} & h_{22} & h_{23} & \
 h_{31} & h_{32} & h_{33}
-\end{pmatrix}
+\end{bmatrix}
 _{i}
 ^\top
 \tag{11}\label{eq:11}
@@ -274,12 +274,12 @@ Which for this pair of equations can be rewriten into matrix form as:
 
 $$
 \begin{equation}
-\begin{pmatrix}
-- x_w & - y_w & -1 &     0 &     0 &  0 & u x_w & u y_w & u \\
-    0 &     0 &  0 & - x_w & - y_w & -1 & v x_w & v y_w & v
-\end{pmatrix}
-_{ij}
-\begin{pmatrix}
+\begin{bmatrix}
+- x_{w,j} & - y_{w,j} & -1 &     0 &     0 &  0 & u x_{w,j} & u y_{w,j} & u_j \\
+    0 &     0 &  0 & - x_{w,j} & - y_{w,j} & -1 & v x_{w,j} & v y_{w,j} & v_j \\
+\end{bmatrix}
+_{i}
+\begin{bmatrix}
 h_{11}\\
 h_{12}\\
 h_{13}\\
@@ -289,13 +289,13 @@ h_{23}\\
 h_{31}\\
 h_{32}\\
 h_{33}\\
-\end{pmatrix}
+\end{bmatrix}
 _{i}
 =
-\begin{pmatrix}
+\begin{bmatrix}
 0\\
 0\\
-\end{pmatrix}
+\end{bmatrix}
 \tag{15}\label{eq:15}
 \end{equation}
 $$
@@ -304,19 +304,15 @@ By iterating over each $j$-th point and stacking these pairs of equations, we cr
 
 $$
 \begin{equation}
-\begin{pmatrix}
-- x_w & - y_w & -1 &     0 &     0 &  0 & u x_w & u y_w & u \\
-    0 &     0 &  0 & - x_w & - y_w & -1 & v x_w & v y_w & v \\
-\end{pmatrix}
-_{i0}
+\begin{bmatrix}
+- x_{w,1} & - y_{w,1} & -1 &     0 &     0 &  0 & u x_{w,1} & u y_{w,1} & u_1 \\
+    0 &     0 &  0 & - x_{w,1} & - y_{w,1} & -1 & v x_{w,1} & v y_{w,1} & v_1 \\
+- x_{w,2} & - y_{w,2} & -2 &     0 &     0 &  0 & u x_{w,2} & u y_{w,2} & u_2 \\
+    0 &     0 &  0 & - x_{w,2} & - y_{w,2} & -2 & v x_{w,2} & v y_{w,2} & v_2 \\
+\end{bmatrix}
+_{i}
 
-\begin{pmatrix}
-- x_w & - y_w & -1 &     0 &     0 &  0 & u x_w & u y_w & u \\
-    0 &     0 &  0 & - x_w & - y_w & -1 & v x_w & v y_w & v \\
-\end{pmatrix}
-_{i1}
-
-\begin{pmatrix}
+\begin{bmatrix}
 h_{11}\\
 h_{12}\\
 h_{13}\\
@@ -326,13 +322,15 @@ h_{23}\\
 h_{31}\\
 h_{32}\\
 h_{33}\\
-\end{pmatrix}
+\end{bmatrix}
 _{i}
 =
-\begin{pmatrix}
+\begin{bmatrix}
 0\\
 0\\
-\end{pmatrix}
+0\\
+0\\
+\end{bmatrix}
 \tag{16}\label{eq:16}
 \end{equation}
 $$
