@@ -341,15 +341,18 @@ _{i}
 \end{equation}
 $$
 
-We now have the elements of homography $$H_i$$ expressed as $$h_i$$ in the form:
+We now have the elements of homography $$H_i$$ expressed as $$\textbf{h}_i$$ in the form:
 
 $$
-M_i \cdot h_i = \textbf{0}
+\begin{equation}
+M_i \cdot \textbf{h}_i = \textbf{0}
+\tag{17}\label{eq:17}
+\end{equation}
 $$
 
-### Solve for $$h$$ in $$M \cdot h = \textbf{0}$$ using SVD
+### Solve for $$h$$ in $$M \cdot \textbf{h} = \textbf{0}$$ using SVD
 
-We've now got the values right where we want them in order to solve for $$h_i$$ using singular value decomposition (SVD).
+We've now got the values right where we want them in order to solve for $$\textbf{h}_i$$ using singular value decomposition (SVD).
 I'm not knowledgable enough in this area to give a satisfying explanation, so I'll instead provide some pointers to better SVD sources in the [$$\S$$Appendix: SVD](#singular-value-decomposition-svd) and provide a practical example calling SVD via a math library such as `numpy`:
 
 ```python
