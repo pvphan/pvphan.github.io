@@ -263,8 +263,8 @@ $$
 \begin{equation}
 \left\{
 \begin{aligned}
-- h_{11} x_w - h_{12} y_w - h_{13} + u h_{31} x_w + u h_{32} y_w + u h_{33} = 0 \\
-- h_{21} x_w - h_{22} y_w - h_{23} + v h_{31} x_w + v h_{32} y_w + v h_{33} = 0
+- h_{11} \cdot x_w - h_{12} \cdot y_w - h_{13} + u \cdot h_{31} x_w + u \cdot h_{32} y_w + u \cdot h_{33} = 0 \\
+- h_{21} \cdot x_w - h_{22} \cdot y_w - h_{23} + v \cdot h_{31} x_w + v \cdot h_{32} y_w + v \cdot h_{33} = 0
 \end{aligned} \right.
 \tag{14}\label{eq:14}
 \end{equation}
@@ -275,8 +275,8 @@ Which for this pair of equations can be rewriten into matrix form as:
 $$
 \begin{equation}
 \begin{bmatrix}
-- x_{w,j} & - y_{w,j} & -1 &     0 &     0 &  0 & u x_{w,j} & u y_{w,j} & u_j \\
-    0 &     0 &  0 & - x_{w,j} & - y_{w,j} & -1 & v x_{w,j} & v y_{w,j} & v_j \\
+- x_{w,j} & - y_{w,j} & -1 &     0 &     0 &  0 & u \cdot x_{w,j} & u \cdot y_{w,j} & u_j \\
+    0 &     0 &  0 & - x_{w,j} & - y_{w,j} & -1 & v \cdot x_{w,j} & v \cdot y_{w,j} & v_j \\
 \end{bmatrix}
 _{i}
 \begin{bmatrix}
@@ -300,15 +300,18 @@ _{i}
 \end{equation}
 $$
 
-By iterating over each $j$-th point and stacking these pairs of equations, we create a matrix we'll call $$M$$ which relates each observed point in an image to it's position in world coordinates by the quantity $$\textbf{h}_i$$:
+By iterating over each $j$-th point and stacking these pairs of equations, we create a matrix we'll call $$M_i$$ which relates each observed point in an image to it's position in world coordinates by the quantity $$\textbf{h}_i$$:
 
 $$
 \begin{equation}
 \begin{bmatrix}
-- x_{w,1} & - y_{w,1} & -1 &     0 &     0 &  0 & u x_{w,1} & u y_{w,1} & u_1 \\
-    0 &     0 &  0 & - x_{w,1} & - y_{w,1} & -1 & v x_{w,1} & v y_{w,1} & v_1 \\
-- x_{w,2} & - y_{w,2} & -2 &     0 &     0 &  0 & u x_{w,2} & u y_{w,2} & u_2 \\
-    0 &     0 &  0 & - x_{w,2} & - y_{w,2} & -2 & v x_{w,2} & v y_{w,2} & v_2 \\
+- x_{w,1} & - y_{w,1} & -1 &     0 &     0 &  0 & u \cdot x_{w,1} & u \cdot y_{w,1} & u_1 \\
+    0 &     0 &  0 & - x_{w,1} & - y_{w,1} & -1 & v \cdot x_{w,1} & v \cdot y_{w,1} & v_1 \\
+- x_{w,2} & - y_{w,2} & -1 &     0 &     0 &  0 & u \cdot x_{w,2} & u \cdot y_{w,2} & u_2 \\
+    0 &     0 &  0 & - x_{w,2} & - y_{w,2} & -1 & v \cdot x_{w,2} & v \cdot y_{w,2} & v_2 \\
+\vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots\\
+- x_{w,N} & - y_{w,N} & -1 &     0 &     0 &  0 & u \cdot x_{w,N} & u \cdot y_{w,N} & u_N \\
+    0 &     0 &  0 & - x_{w,N} & - y_{w,N} & -1 & v \cdot x_{w,N} & v \cdot y_{w,N} & v_N \\
 \end{bmatrix}
 _{i}
 
@@ -330,12 +333,21 @@ _{i}
 0\\
 0\\
 0\\
+\vdots\\
+0\\
+0\\
 \end{bmatrix}
 \tag{16}\label{eq:16}
 \end{equation}
 $$
 
-### Solve for $$h$$ in $$M \cdot h = 0$$ using SVD
+We now have the elements of homography $$H_i$$ expressed as $$h_i$$ in the form:
+
+$$
+M_i \cdot h_i = \textbf{0}
+$$
+
+### Solve for $$h$$ in $$M \cdot h = \textbf{0}$$ using SVD
 
 We've now got the values right where we want them in order to solve for $$h_i$$ using singular value decomposition (SVD).
 I'm not knowledgable enough in this area to give a satisfying explanation, so I'll instead provide some pointers to better SVD sources in the [$$\S$$Appendix: SVD](#singular-value-decomposition-svd) and provide a practical example calling SVD via a math library such as `numpy`:
