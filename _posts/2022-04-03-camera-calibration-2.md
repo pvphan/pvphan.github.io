@@ -275,8 +275,8 @@ Which for this pair of equations can be rewriten into matrix form as:
 $$
 \begin{equation}
 \begin{bmatrix}
-- x_{w,j} & - y_{w,j} & -1 &     0 &     0 &  0 & u \cdot x_{w,j} & u \cdot y_{w,j} & u_j \\
-    0 &     0 &  0 & - x_{w,j} & - y_{w,j} & -1 & v \cdot x_{w,j} & v \cdot y_{w,j} & v_j \\
+- x_{w,j} & - y_{w,j} & -1 &         0 &         0 &  0 & u_j \cdot x_{w,j} & u_j \cdot y_{w,j} & u_j \\
+        0 &         0 &  0 & - x_{w,j} & - y_{w,j} & -1 & v_j \cdot x_{w,j} & v_j \cdot y_{w,j} & v_j \\
 \end{bmatrix}
 _{i}
 \begin{bmatrix}
@@ -305,13 +305,13 @@ By iterating over each $j$-th point and stacking these pairs of equations, we cr
 $$
 \begin{equation}
 \begin{bmatrix}
-- x_{w,1} & - y_{w,1} & -1 &     0 &     0 &  0 & u \cdot x_{w,1} & u \cdot y_{w,1} & u_1 \\
-    0 &     0 &  0 & - x_{w,1} & - y_{w,1} & -1 & v \cdot x_{w,1} & v \cdot y_{w,1} & v_1 \\
-- x_{w,2} & - y_{w,2} & -1 &     0 &     0 &  0 & u \cdot x_{w,2} & u \cdot y_{w,2} & u_2 \\
-    0 &     0 &  0 & - x_{w,2} & - y_{w,2} & -1 & v \cdot x_{w,2} & v \cdot y_{w,2} & v_2 \\
+- x_{w,1} & - y_{w,1} & -1 &     0 &     0 &  0 & u_1 \cdot x_{w,1} & u_1 \cdot y_{w,1} & u_1 \\
+    0 &     0 &  0 & - x_{w,1} & - y_{w,1} & -1 & v_1 \cdot x_{w,1} & v_1 \cdot y_{w,1} & v_1 \\
+- x_{w,2} & - y_{w,2} & -1 &     0 &     0 &  0 & u_2 \cdot x_{w,2} & u_2 \cdot y_{w,2} & u_2 \\
+    0 &     0 &  0 & - x_{w,2} & - y_{w,2} & -1 & v_2 \cdot x_{w,2} & v_2 \cdot y_{w,2} & v_2 \\
 \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots\\
-- x_{w,N} & - y_{w,N} & -1 &     0 &     0 &  0 & u \cdot x_{w,N} & u \cdot y_{w,N} & u_N \\
-    0 &     0 &  0 & - x_{w,N} & - y_{w,N} & -1 & v \cdot x_{w,N} & v \cdot y_{w,N} & v_N \\
+- x_{w,N} & - y_{w,N} & -1 &     0 &     0 &  0 & u_N \cdot x_{w,N} & u_N \cdot y_{w,N} & u_N \\
+    0 &     0 &  0 & - x_{w,N} & - y_{w,N} & -1 & v_N \cdot x_{w,N} & v_N \cdot y_{w,N} & v_N \\
 \end{bmatrix}
 _{i}
 
