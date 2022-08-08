@@ -47,7 +47,7 @@ The ordering of steps for Zhang's method are:
 
 ### Relate world points to image points as homographies, $$H_i$$
 
-A homography relates a plane in 3D space to another plane in 3D space.
+A homography is a 3-by-3 matrix that relates a plane in 3D space to another plane in 3D space.
 In our case, we care about the relation between the calibration board plane and the cameras sensor plane (assuming no lens distortion).
 
 We will use the 2D-3D point associations to compute the homographies $$\textbf{H} = [H_1, H_2, ..., H_n]$$, for each of the $$n$$ views in the dataset.
@@ -300,7 +300,7 @@ _{i}
 \end{equation}
 $$
 
-By iterating over each $j$-th point and stacking these pairs of equations, we create a matrix we'll call $$M_i$$ which relates each observed point in an image to it's position in world coordinates by the quantity $$\textbf{h}_i$$:
+By iterating over each $j$-th point for $$j \in [1, 2, ..., m]$$ and stacking these pairs of equations vertically, we create a matrix we'll call $$M_i$$ which relates each observed point in an image to it's position in world coordinates by the quantity $$\textbf{h}_i$$:
 
 $$
 \begin{equation}
@@ -310,8 +310,8 @@ $$
 - x_{w,2} & - y_{w,2} & -1 &     0 &     0 &  0 & u_2 \cdot x_{w,2} & u_2 \cdot y_{w,2} & u_2 \\
     0 &     0 &  0 & - x_{w,2} & - y_{w,2} & -1 & v_2 \cdot x_{w,2} & v_2 \cdot y_{w,2} & v_2 \\
 \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots\\
-- x_{w,N} & - y_{w,N} & -1 &     0 &     0 &  0 & u_N \cdot x_{w,N} & u_N \cdot y_{w,N} & u_N \\
-    0 &     0 &  0 & - x_{w,N} & - y_{w,N} & -1 & v_N \cdot x_{w,N} & v_N \cdot y_{w,N} & v_N \\
+- x_{w,m} & - y_{w,m} & -1 &     0 &     0 &  0 & u_m \cdot x_{w,m} & u_m \cdot y_{w,m} & u_m \\
+    0 &     0 &  0 & - x_{w,m} & - y_{w,m} & -1 & v_m \cdot x_{w,m} & v_m \cdot y_{w,m} & v_m \\
 \end{bmatrix}
 _{i}
 
@@ -393,7 +393,7 @@ Now we are ready to run our non-linear optimization algorithm, which in this cas
 
 Below, green crosses are the measured 2D marker points and magenta crosses are the projection of the associated 3D points using the 'current' camera parameters.
 This gif plays through the iterative refinement of the camera parameters (step #5 of Zhang's method) for a synthetic example.
-(Generation of this gif from: [https://github.com/pvphan/camera-calibration](https://github.com/pvphan/camera-calibration).)
+(Generation of this gif from [here](https://github.com/pvphan/camera-calibration/blob/main/src/animate.py).)
 
 ![](assets/img/reprojection.gif)
 {: centeralign }
@@ -433,8 +433,9 @@ x = V_T[-1]
 ```
 
 Additional links:
-- [(Wikipedia) More applications of the SVD](https://en.wikipedia.org/wiki/Singular_value_decomposition#Applications_of_the_SVD)
+- [(blog) The Singular Value Decomposition by Peter Bloem](https://peterbloem.nl/blog/pca-4)
 - [(blog) Explanation of SVD by Greg Gunderson](https://gregorygundersen.com/blog/2018/12/10/svd/)
+- [(Wikipedia) More applications of the SVD](https://en.wikipedia.org/wiki/Singular_value_decomposition#Applications_of_the_SVD)
 
 
 ### Non-linear least squares optimization (Levenberg-Marquardt)

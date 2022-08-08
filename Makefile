@@ -8,7 +8,7 @@ RUN_FLAGS = --rm \
 
 serve: image
 	docker run ${RUN_FLAGS} \
-		jekyll serve --livereload --host 0.0.0.0
+		jekyll serve --livereload --host 0.0.0.0 --open-url
 
 shell: image
 	docker run -it ${RUN_FLAGS} \
