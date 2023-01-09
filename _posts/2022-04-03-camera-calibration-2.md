@@ -353,7 +353,7 @@ $$
 ### Solve for $$h$$ in $$M \cdot \textbf{h} = \textbf{0}$$ using SVD
 
 We've now got the values right where we want them in order to solve for $$\textbf{h}_i$$ using singular value decomposition (SVD).
-I'm not knowledgable enough in this area to give a satisfying explanation, so I'll instead provide some pointers to better SVD sources in the [$$\S$$Appendix: SVD](#singular-value-decomposition-svd) and provide a practical example calling SVD via a math library such as `numpy`:
+I'm not knowledgeable enough in this area to give a satisfying explanation, so I'll instead provide some pointers to better SVD sources in the [$$\S$$Appendix: SVD](#singular-value-decomposition-svd) and provide a practical example calling SVD via a math library such as `numpy`:
 
 ```python
 # M * h = 0, where M (m,n) is known and we want to solve for h (n,1)
@@ -365,15 +365,85 @@ h = V_T[-1]
 **Code**: For a Python example of the steps from Zhang.1, you can look at [linearcalibrate.py: estimateHomography](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L24).
 
 
-## Zhang.2) Compute initial intrinsic matrix, A
+## Zhang.2) Compute initial intrinsic matrix, $$A_{init}$$
+
+Now that we can solve for a single homography for view, $$H_i$$, we'll solve for each view's homography an store them in a vector of homographies, $$\textbf{H}$$.
+
+$$\textbf{H}$$ will be the input to our function to solve for our initial estimate (or "guess") for the intrinsic camera matrix, $$A_{init}$$.
+Recall from equation (8) and (10) the definition of a single homography matrix, $$H_i$$:
+
+$$
+\begin{equation}
+H
+_{i}
+=
+\begin{bmatrix}
+|     & |     & |    \\
+h_{1} & h_{2} & h_{3}\\
+|     & |     & |    \\
+\end{bmatrix}
+_{i}
+=
+\lambda
+\cdot
+\textbf{A}
+\cdot
+\begin{bmatrix}
+|     & |     & |\\
+r_{x} & r_{y} & t\\
+|     & |     & |\\
+\end{bmatrix}
+_{i}
+\tag{18}\label{eq:18}
+\end{equation}
+$$
+
+Next, recall that $$r_{x}$$ and $$r_{y}$$ are the first two columns of the rotation matrix $$R_i$$, which is the top-left 3x3 elements in $$W_i$$ (equation (7.b)).
+By the definition of a 3x3 rotation matrix, $$r_{x}$$ and $$r_{y}$$ are **orthonormal** meaning the following two things:
+1. They are **orthogonal** to each other.
+2. They are each **normal** vectors, i.e. they have a **magnitude of $$1$$**.
+
+$$
+\begin{equation}
+\begin{split}
+
+r_{x}^\top
+\cdot
+r_{y}
+=
+r_{y}^\top
+\cdot
+r_{x}
+=
+0 \\
+
+r_{x}^\top
+\cdot
+r_{x}
+=
+r_{y}^\top
+\cdot
+r_{y}
+=
+1
+
+\end{split}
+\tag{19}\label{eq:19}
+\end{equation}
+$$
 
 **Code**: For a Python example of this, you can look at [linearcalibrate.py: computeIntrinsicMatrix](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L93).
 
 
-## Zhang.3) Compute initial distortion vector, k
+## Zhang.3) Compute initial distortion vector, $$k_{init}$$
+
+**Code**: For a Python example of this, you can look at [distortion.py: estimateDistortion](https://github.com/pvphan/camera-calibration/blob/main/src/distortion.py#L110).
+Though this method is part of a class it can be thought of as a pure function.
 
 
-## Zhang.4) Compute initial extrinsic parameters, W
+## Zhang.4) Compute initial extrinsic parameters, $$W_{init}$$
+
+**Code**: For a Python example of this, you can look at [linearcalibrate.py: computeExtrinsics](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L306).
 
 
 ## Zhang.5) Refine A, k, W using non-linear optimization
