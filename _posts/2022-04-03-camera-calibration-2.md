@@ -432,6 +432,39 @@ r_{y}
 \end{equation}
 $$
 
+From equation (18), we can single out $$r_{x}$$ and $$r_{y}$$ as:
+
+$$
+\begin{equation}
+\begin{split}
+
+h_{1}
+=
+\lambda
+\cdot
+\textbf{A}
+\cdot
+r_{x}
+\\
+
+h_{2}
+=
+\lambda
+\cdot
+\textbf{A}
+\cdot
+r_{y}
+
+\end{split}
+\tag{20}\label{eq:20}
+\end{equation}
+$$
+
+### Reformulate using DLT
+
+### Solve for $$b$$ in $$V \cdot \textbf{b} = \textbf{0}$$ using SVD
+
+
 **Code**: For a Python example of this, you can look at [linearcalibrate.py: computeIntrinsicMatrix](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L93).
 
 
