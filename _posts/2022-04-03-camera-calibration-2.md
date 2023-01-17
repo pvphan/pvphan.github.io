@@ -350,7 +350,7 @@ M_i \cdot \textbf{h}_i = \textbf{0}
 \end{equation}
 $$
 
-### Solve for $$h$$ in $$M \cdot \textbf{h} = \textbf{0}$$ using SVD
+### Solve for $$\textbf{h}$$ in $$M \cdot \textbf{h} = \textbf{0}$$ using SVD
 
 We've now got the values right where we want them in order to solve for $$\textbf{h}_i$$ using singular value decomposition (SVD).
 I'm not knowledgeable enough in this area to give a satisfying explanation, so I'll instead provide some pointers to better SVD sources in the [$$\S$$Appendix: SVD](#singular-value-decomposition-svd) and provide a practical example calling SVD via a math library such as `numpy`:
@@ -400,8 +400,8 @@ $$
 
 Next, recall that $$r_{x}$$ and $$r_{y}$$ are the first two columns of the rotation matrix $$R_i$$, which is the top-left 3x3 elements in $$W_i$$ (equation (7.b)).
 By the definition of a 3x3 rotation matrix, $$r_{x}$$ and $$r_{y}$$ are **orthonormal** meaning the following two things:
-1. They are **orthogonal** to each other.
-2. They are each **normal** vectors, i.e. they have a **magnitude of $$1$$**.
+1. They are **orthogonal** to each other, so their dot product evaluates to $$0$$.
+2. They are each **normal** vectors, so they have a magnitude of $$1$$.
 
 $$
 \begin{equation}
@@ -491,7 +491,7 @@ In non-linear optimization, it's often impossible to arrive at a good solution u
 Now we are ready to run our non-linear optimization algorithm, which in this case is Levenberg-Marquardt (see [$$\S$$Appendix: Nonlinear least squares](#non-linear-least-squares-optimization-levenberg-marquardt) for more).
 
 1. Start by setting the *current* calibration parameters $$\textbf{P}_{curr}$$ to the initial guess values computed in Zhang.1 - Zhang.3.
-1. Use $$\textbf{P}_{curr}$$ to project the input world points $${}^wX_{ij}$$ to thier image coordinates $$u_{ij}$$
+1. Use $$\textbf{P}_{curr}$$ to project the input world points $${}^wX_{ij}$$ to their image coordinates $$u_{ij}$$
 1. Evaluate the Jacbobian $$J$$ for all input points at the *current* calibration parameter values.
 
 Below, green crosses are the measured 2D marker points and magenta crosses are the projection of the associated 3D points using the 'current' camera parameters.
