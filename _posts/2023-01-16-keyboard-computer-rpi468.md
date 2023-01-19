@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Raspberry Pi 468: a full computer in a keyboard"
+title: "Raspberry Pi 468: a full computer in a mechanical keyboard"
 author: "Paul Vinh Phan"
 categories: journal
 image: rpi468greyclose.jpg
@@ -33,7 +33,7 @@ It seemed fitting to combine the names:
 Raspberry Pi 400 + Tada 68 = Raspberry Pi 468.
 
 
-# Design process
+# Design constraints
 I drew inspiration from others online who had combined a mechanical keyboard with the Pi 400 (shout out to Khmel and X).
 However there were compromises made in their implementations that I did not want for my design.
 
@@ -43,16 +43,48 @@ These designs compromised on the following:
 
 The goal for my design was to have a seemless experience in operating in either 'keyboard computer' mode, or 'keyboard only' mode (for a host PC).
 To achieve this and also eliminate a USB A cable loop outside of the case, I needed to implement a USB switching circuit board.
-After some research, I realized this circuit board did not exist in the form factor I needed, and I'd have to design and build a custom one.
 Another design constraint I imposed was that the form factor of the keyboard be indistinguishable from any similarly sized mechanical keyboards (65% layout).
-This size constraint impacted the component selection for the custom USB switching circuit.
+After some research, I realized this circuit board did not exist in the form factor I needed, and I'd have to design and build a custom one.
+
+For the mechanical design I settled on a two-part case made of 3D printed material.
+I decided on mechanical fastening of the two halves for repairability.
+I toyed with the idea of a unibody CNC'd aluminum case, but cost and fear of signal degradation took me off this path.
+In the second iteration of the case design, I included a CNC'd aluminum heat sink for passive heat dissapation of the Pis CPU and RAM.
+
+
+# Tools used
+Design tools
+- For circuit design, I used KiCAD.
+- For mechanical design (case), I used SOLIDWORKS.
+
+Services
+- For PCB fabrication, I used OSHPark.
+- For stencil printing, I used OSHStencils.
+
+Part suppliers
+- I ordered my circuit components from DigiKey.
+- For mechanical components, I used McMaster.
+
+- For soldering, I used a combination of hot plate and hot air. I also tried a reflow oven but had poor results.
+
 
 # Challenges
 The concept and design of this project were thankfully very straightforward.
 Where I struggled most was at the execution level:
-- Hand soldering the USB switcher circuit
+- Soldering the USB switcher circuit
 - Desoldering and soldering the USB port on the assembled keyboard PCB
 - Designing the tighter tolerance features around the Pi 400 PCB: mounting holes, snap clips
+
+
+# Building one yourself
+I honestly hadn't put much thought into what it would take for someone else to replicate this project, but I'll leave some high-level pointers here.
+
+## Buy list
+
+## Assembly
+
+## Testing
+
 
 # Final result
 Overall I'm quite happy with the result.
