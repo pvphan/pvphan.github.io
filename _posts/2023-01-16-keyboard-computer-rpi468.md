@@ -88,7 +88,7 @@ I honestly hadn't put much thought into what it would take for someone else to r
 
 # Final result
 Overall I'm quite happy with the result.
-I can't say I've been daily driving this keyboard computer, but that has more to do with the raw compute horse power of the Raspberry Pi 4.
+I can't say I've been daily driving the keyboard in this computer, but that has more to do with the raw compute horse power of the Raspberry Pi 4.
 
 Generally I use it most as a regular keyboard, especially when I travel.
 Since my work spaces at the office and at home have their own dedicated keyboard, this one usually stays in my backpack as a backup.
