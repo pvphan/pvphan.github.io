@@ -23,6 +23,11 @@ As well as their iconic credit card sized form factor, the company behind Raspbe
 The 'Pi 400' is a fully featured Raspberry Pi built into a slim keyboard, featuring most of the IO ports of the original.
 The density of utility of the Pi 400 was something I just had to have, even if I didn't have an immediate need for it.
 
+![](assets/img/2023-01-16-keyboard-computer-rpi468/pi400.jpg)
+{: centeralign }
+The official Raspberry Pi 400 keyboard computer.
+{: centeralign }
+
 After a somewhat impulsive purchase from my local Micro Center, I went home with a Pi 400.
 It was both incredible and lack luster in the ways I expected: it was a bonafide Raspberry Pi computing platform, and the keyboard was mediocre to type on (mushy and uneven feeling, shallow key travel).
 The obvious conclusion that I came to was: why not combine a tactile mechanical keyboard with the main board of the Pi 400?
@@ -30,14 +35,14 @@ The obvious conclusion that I came to was: why not combine a tactile mechanical 
 And so I set to work to combine my trusty (albiet aging) Tada 68 mechanical keyboard with the main board of the Pi 400.
 It seemed fitting to combine the names:
 
-Raspberry Pi 400 + Tada 68 = Raspberry Pi 468.
+Raspberry Pi **400** + Tada **68** = Raspberry Pi **468**.
+
+{% include image-gallery.html folder="/assets/img/2023-01-16-keyboard-computer-rpi468" %}
 
 
-# Design constraints
-I drew inspiration from others online who had combined a mechanical keyboard with the Pi 400 (shout out to Khmel and X).
-However there were compromises made in their implementations that I did not want for my design.
-
-These designs compromised on the following:
+# Design goals
+I drew inspiration from [Pavlo Khmel on YouTube](https://www.youtube.com/watch?v=TTT5TCiPke4&pp=ygUkcmFzcGJlcnJ5IHBpIDQwMCBtZWNoYW5pY2FsIGtleWJvYXJk&ab_channel=PavloKhmel) also upgraded the Pi 400 to be integrated with a mechanical keyboard.
+However there were design decisions made in his implementation that I wanted to do differently:
 1. The mechanical keyboard is connected to the Pi 400 by running a USB A cable out of the case and then back in. Functionally, there is nothing wrong with this, but aesthetically I could not abide it.
 2. When the mechanical keyboard is connected to the Pi 400, it cannot be used by any other host device such as a desktop PC. This is inconvenient if the Pi is meant to be used as a headless server while using the keyboard for a desktop PC.
 
