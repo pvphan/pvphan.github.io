@@ -37,7 +37,7 @@ It seemed fitting to combine the names:
 
 Raspberry Pi **400** + Tada **68** = Raspberry Pi **468**.
 
-{% include image-gallery.html folder="/assets/img/2023-01-16-keyboard-computer-rpi468" %}
+If you're interested in building one of your own, check out these links for the design / CAD files.
 
 
 # Design goals
@@ -58,43 +58,26 @@ In the second iteration of the case design, I included a CNC'd aluminum heat sin
 
 
 # Tools used
-Design tools
-- For circuit design, I used KiCAD.
-- For mechanical design (case), I used SOLIDWORKS.
+I used KiCAD for the USB switching circuit PCB design and SolidWorks for mechanical design of the case.
+PCB and stencil fab was done through OSHPark and OSHStencils.
+Electrical components were ordered off DigiKey and mechanical parts from McMaster.
 
-Services
-- For PCB fabrication, I used OSHPark.
-- For stencil printing, I used OSHStencils.
-
-Part suppliers
-- I ordered my circuit components from DigiKey.
-- For mechanical components, I used McMaster.
-
-- For soldering, I used a combination of hot plate and hot air. I also tried a reflow oven but had poor results.
+For surface mount device (SMD) soldering, I used a combination of hot plate and hot air. I also tried a reflow oven but had poor results.
 
 
 # Challenges
 The concept and design of this project were thankfully very straightforward.
 Where I struggled most was at the execution level:
-- Soldering the USB switcher circuit
+- Soldering the final USB switcher circuit with SMD components.
 - Desoldering and soldering the USB port on the assembled keyboard PCB
 - Designing the tighter tolerance features around the Pi 400 PCB: mounting holes, snap clips
 
 
-# Building one yourself
-I honestly hadn't put much thought into what it would take for someone else to replicate this project, but I'll leave some high-level pointers here.
-
-## Buy list
-
-## Assembly
-
-## Testing
-
-
 # Final result
 Overall I'm quite happy with the result.
-I can't say I've been daily driving the keyboard in this computer, but that has more to do with the raw compute horse power of the Raspberry Pi 4.
 
 Generally I use it most as a regular keyboard, especially when I travel.
 Since my work spaces at the office and at home have their own dedicated keyboard, this one usually stays in my backpack as a backup.
 It's comforting to know though that I have all of the low-level hardware capability of a Raspberry Pi with me at all times without any additional weight or backpack space being taken up.
+
+{% include image-gallery.html folder="/assets/img/2023-01-16-keyboard-computer-rpi468" %}
