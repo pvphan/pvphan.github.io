@@ -77,8 +77,14 @@ If you're looking for design files, see the [Design files](#design-files) sectio
 ## Circuit design
 
 The goal for my design was to have a seemless experience in operating in either 'keyboard computer' mode, or 'keyboard only' mode (for a host PC).
-To achieve this and also eliminate a USB A cable loop outside of the case, I needed a USB host switching circuit board.
+To achieve this and also eliminate a USB-A cable loop outside of the case, I needed a USB host switching circuit board.
 After some research, I realized this circuit board did not exist in the form factor I needed, and I'd have to design and build a custom one.
+
+Here's a summary of what the circuit does:
+- Soldered directly into a depopulated USB-A 2.0 port on the Pi 400
+- It accepts a single USB-C connection
+- When there **is** a USB-C connection, the connected device becomes the host device
+- When there **is not** USB-C connection, the Pi 400 is the host device
 
 With some pointers on components from my excellent colleagues [Casey Goodwin](https://www.linkedin.com/in/charles-goodwin-b82395/) and [Mike Yagudayev](https://www.linkedin.com/in/michael-yagudayev-033b964b/), I selected components and made a breadboard prototype.
 
@@ -87,7 +93,7 @@ With some pointers on components from my excellent colleagues [Casey Goodwin](ht
 Prototype of components on breakout boards on a messy desk.
 {: centeralign }
 
-After ironing out schematic / wiring issues and tuning resistor values for the desired host switching behavior, I designed the PCB in KiCAD and had it fabricated through [OSHPark](https://oshpark.com/).
+After ironing out schematic / wiring issues and confirming resistor values for the desired host switching behavior, I designed the PCB in KiCAD and had it fabricated through [OSHPark](https://oshpark.com/).
 Using a stencil, hotplate, and heat gun, I reflow soldered the components to the PCB.
 
 [![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220802_015153919.jpg){:width="400px"}](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220802_015153919.jpg)
@@ -142,10 +148,8 @@ For surface mount device (SMD) soldering, I tried a reflow oven but had poor res
 I found more success using a combination of hot plate from the bottom and hot air from the top simultaneously.
 
 Links to files:
-- Model files for case (STLs + SolidWorks): [https://github.com/pvphan/rpi468](https://github.com/pvphan/rpi468)
+- Model files for case (STLs): [https://github.com/pvphan/rpi468-cad](https://github.com/pvphan/rpi468-cad)
 - PCB design files (KiCAD): [https://github.com/pvphan/rpi468-pcb](https://github.com/pvphan/rpi468-pcb)
-- OSHPark: [USB host switching circuit](https://oshpark.com/shared_projects/PfGfJg1X)
-- OSHPark: [Mini USB pad to JST](https://oshpark.com/shared_projects/LUSGZfi8)
 
 
 # Final result
@@ -158,3 +162,8 @@ Running Raspberry Pi OS on the RPi 468 in 'keyboard computer' mode at my desk.
 Overall I'm quite happy with the result.
 I use it most as a regular keyboard, especially when I travel.
 Since my work spaces at the office and at home have their own dedicated keyboard, this one usually stays in my backpack as a fully-loaded Linux PC backup.
+
+In my latest iteration (which I won't document here), I designed a passive heatsink and modified the case to accept it.
+I also changed the material to PETG instead of PLA for improved durability and heat tolerance.
+
+Thanks for reading!
