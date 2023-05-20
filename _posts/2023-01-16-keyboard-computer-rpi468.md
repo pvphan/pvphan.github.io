@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Raspberry Pi 468: a full computer in a mechanical keyboard"
+title: "Raspberry Pi 468: a versatile computer + keyboard combo"
 author: "Paul Vinh Phan"
 categories: journal
 image: rpi468greyclose.jpg
@@ -14,65 +14,125 @@ Table of Contents:
 {:toc}
 
 # Intro
+
+TL;DR: Raspberry Pi 400 + Tada68 = Raspberry Pi 468.
+
 I'm someone who appreciates a tactile keyboard experience.
 When keystrokes have a positive, discrete feel, it provides a passive confirmation to my hands that my keypresses have had the intended effect.
 This makes typing and writing code both more efficient and more enjoyable.
 
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/tada68.jpg){:width="600px"}](assets/img/2023-01-16-keyboard-computer-rpi468/tada68.jpg)
+{: centeralign }
+The Tada68 mechanical keyboard ([source](https://www.aliexpress.com/i/2251832803921519.html?gatewayAdapt=4itemAdapt)).
+{: centeralign }
+
 I'm also someone who loves the ethos around the Raspberry Pi single board computer -- a small, inexpensive computer put into the hands of as many people as possible.
 As well as their iconic credit card sized form factor, the company behind Raspberry Pi also made the Raspberry Pi 400.
 The 'Pi 400' is a fully featured Raspberry Pi built into a slim keyboard, featuring most of the IO ports of the 'B+' form factor.
-The density of utility of the Pi 400 was something I just had to have, even if I didn't have an immediate need for it.
+The *utility density* of the Pi 400 was something I just had to have.
 
-![](assets/img/2023-01-16-keyboard-computer-rpi468/pi400.jpg)
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/pi400.jpg){:width="600px"}](assets/img/2023-01-16-keyboard-computer-rpi468/pi400.jpg)
 {: centeralign }
 The official Raspberry Pi 400 keyboard computer ([source](https://www.raspberrypi.com/products/raspberry-pi-400/)).
 {: centeralign }
 
 After a somewhat impulsive purchase from my local Micro Center, I went home with a Pi 400.
-It was both incredible and lack luster in the ways I expected: it was a bonafide Raspberry Pi computing platform, and the keyboard was mediocre to type on (mushy and uneven feeling, shallow key travel).
-The obvious conclusion that I came to was: why not combine a tactile mechanical keyboard with the main board of the Pi 400?
+It was both incredible and lack luster in the ways I expected: it was a bonafide Raspberry Pi computing platform with a *terrible keyboard* (mushy and uneven feeling, shallow key travel).
 
-And so I set to work to combine my trusty (albiet aging) Tada 68 mechanical keyboard with the main board of the Pi 400.
-It seemed fitting to combine the names:
+The obvious conclusion that I came to was: why not combine a tactile mechanical keyboard with the mainboard of the Pi 400?
+Surely there are plenty of people who have already done this.
+It turns it this is *not so simple* to do without making fairly large aesthetic and functional tradeoffs.
 
-Raspberry Pi 400 + Tada 68 = Raspberry Pi 468.
+And so I set to work to combine my trusty (albiet aging) Tada68 mechanical keyboard with the mainboard of the Pi 400.
 
-If you're interested in building one of your own, check out the [Design files](#design-files) section below.
+**It was a success**. Along the way I had to:
+- design a custom USB host switching circuit
+- design a sturdy custom case that I could print and assemble at home
+- do some ugly soldering
+
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_195414086.jpg){:width="600px"}](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_195414086.jpg)
+{: centeralign }
+Completed Raspberry Pi 468 with built in USB host switching circuit, printed in PLA.
+{: centeralign }
 
 
-# Design goals
-I drew inspiration from [Pavlo Khmel on YouTube](https://www.youtube.com/watch?v=TTT5TCiPke4&pp=ygUkcmFzcGJlcnJ5IHBpIDQwMCBtZWNoYW5pY2FsIGtleWJvYXJk&ab_channel=PavloKhmel) who also upgraded the Pi 400 to be integrated with a mechanical keyboard.
-However, there were design decisions made in his implementation that I wanted to do differently:
-1. His mechanical keyboard was connected to the Pi 400 by running a USB A cable out of the case and then back in.
-Functionally, there is nothing wrong with this, but aesthetically I could not abide it -- for my keyboard the connecting cable had to be internally routed.
-2. When the mechanical keyboard is connected to the Pi 400, it cannot be used by any other host device such as a desktop PC.
-A desirable feature to me is to use the keyboard with a host device while also running the Pi as a headless server (e.g. for interfacing over I2C, GPIO, etc).
+# Design
+
+The major design decisions I made for the RPi 468 at the outset:
+1. Behave as a **normal keyboard** for other USB hosts (e.g. desktop, laptop) whether the Pi 400 is powered on or not.
+2. Switching between operating modes should be implicit based on what physical connections are made, **no user input** required.
+3. **Indistinguishable in appearance** from a typical 65% mechanical keyboard.
+
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/operatingmodes.png){:width="800px"}](assets/img/2023-01-16-keyboard-computer-rpi468/operatingmodes.png)
+{: centeralign }
+Diagram of the distinct operating modes.
+{: centeralign }
+
+I was pretty confident the mechanical design would work out given form factors of the Pi 400 mainboard and the Tada68 PCB.
+I started by prototyping the circuit which would meet the specifications above.
+
+If you're looking for design files, see the [Design files](#design-files) section below. I don't intend to write up any steps or tutorials.
+
+
+## Circuit design
 
 The goal for my design was to have a seemless experience in operating in either 'keyboard computer' mode, or 'keyboard only' mode (for a host PC).
-To achieve this and also eliminate a USB A cable loop outside of the case, I needed to implement a USB switching circuit board.
-Another design constraint I imposed was that the form factor of the keyboard be indistinguishable from any similarly sized mechanical keyboards (65% layout).
+To achieve this and also eliminate a USB A cable loop outside of the case, I needed a USB host switching circuit board.
 After some research, I realized this circuit board did not exist in the form factor I needed, and I'd have to design and build a custom one.
+
+With some pointers on components from my excellent colleagues [Casey Goodwin](https://www.linkedin.com/in/charles-goodwin-b82395/) and [Mike Yagudayev](https://www.linkedin.com/in/michael-yagudayev-033b964b/), I selected components and made a breadboard prototype.
+
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220807_233444819.jpg){:width="800px"}](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220807_233444819.jpg)
+{: centeralign }
+Prototype of components on breakout boards on a messy desk.
+{: centeralign }
+
+After ironing out schematic / wiring issues and tuning resistor values for the desired host switching behavior, I designed the PCB in KiCAD and had it fabricated through [OSHPark](https://oshpark.com/).
+Using a stencil, hotplate, and heat gun, I reflow soldered the components to the PCB.
+
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220802_015153919.jpg){:width="400px"}](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220802_015153919.jpg)
+{: centeralign }
+USB host switching circuit right after hotplate soldering.
+{: centeralign }
+
+Next came the surgery of depopulating the USB ports from both the keyboard and the Pi 400 (removed it's single USB 2.0 port).
+This is the part I'm least proud of, but all of the solder joints have held firm.
+
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_190946697.jpg){:width="600px"}](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_190946697.jpg)
+{: centeralign }
+USB host switching circuit right after hotplate soldering.
+{: centeralign }
+
+
+## Mechanical design
+
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/rpi468-iso-top.png){:width="800px"}](assets/img/2023-01-16-keyboard-computer-rpi468/rpi468-iso-top.png)
+{: centeralign }
+ISO view of the RPi 468 mechanical design.
+{: centeralign }
+
 
 For the mechanical design I settled on a two-part case made of 3D printed material.
 I decided on mechanical fastening of the two halves over adhesive for strength and repairability.
-I toyed with the idea of a unibody CNC'd aluminum case, but cost and fear of wireless signal degradation took me off this path.
-In the second iteration of the case design, I included a CNC'd aluminum heat sink for passive heat dissapation of the Pis CPU and RAM.
+I toyed with the idea of a unibody CNC'd aluminum case, but cost and likelihood of wireless signal degradation took me off this path.
+
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_212318851.jpg){:width="600px"}](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_212318851.jpg)
+{: centeralign }
+A couple iterations of the case and a Pi 400 mainboard mockup for validating model accuracy.
+{: centeralign }
+
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_195337434.jpg){:width="600px"}](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_195337434.jpg)
+{: centeralign }
+View of front I/O ports after fully assembled.
+{: centeralign }
 
 
 # Design files
 
-Since the build process didn't go very cleanly for me, I won't try documenting exactly how to reproduce building this.
+Since the build process was rife with trial and error that I didn't document thoroughly, I won't write up any documentation for people to try following.
 For those familiar with SMD soldering and 3D printing though, the images in the gallery and these github repos should provide direction.
 One caveat: the case model files are for the updated version of the case that has a cutout for a heat sink.
-Aside from this it's basically the same case.
-
-Github:
-- Model files for case (STLs + SolidWorks): [https://github.com/pvphan/rpi468](https://github.com/pvphan/rpi468)
-- PCB design files (KiCAD): [https://github.com/pvphan/rpi468-pcb](https://github.com/pvphan/rpi468-pcb)
-
-PCB projects on OSHPark:
-- [USB switch board](https://oshpark.com/shared_projects/PfGfJg1X)
-- [Mini USB pad to JST](https://oshpark.com/shared_projects/LUSGZfi8)
+Aside from this it's basically the same case shown in this post.
 
 I used KiCAD for the USB switching circuit PCB design and SolidWorks for mechanical design of the case.
 PCB and stencil fab was done through OSHPark and OSHStencils.
@@ -81,27 +141,20 @@ Electrical components were ordered off DigiKey and mechanical parts from McMaste
 For surface mount device (SMD) soldering, I tried a reflow oven but had poor results.
 I found more success using a combination of hot plate from the bottom and hot air from the top simultaneously.
 
-
-# Challenges
-The concept and design of this project were thankfully very straightforward.
-The most significant challenges were at the execution level:
-- Designing the USB switcher circuit with my novice level of circuit design skill.
-- Soldering the final USB switcher circuit with SMD components.
-- Desoldering and soldering the USB port on the assembled keyboard PCB
-- Designing the tighter tolerance features around the Pi 400 PCB: mounting holes, snap clips
+Links to files:
+- Model files for case (STLs + SolidWorks): [https://github.com/pvphan/rpi468](https://github.com/pvphan/rpi468)
+- PCB design files (KiCAD): [https://github.com/pvphan/rpi468-pcb](https://github.com/pvphan/rpi468-pcb)
+- OSHPark: [USB host switching circuit](https://oshpark.com/shared_projects/PfGfJg1X)
+- OSHPark: [Mini USB pad to JST](https://oshpark.com/shared_projects/LUSGZfi8)
 
 
 # Final result
 
-![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_194531996.jpg)
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_194531996.jpg)](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_194531996.jpg)
 {: centeralign }
 Running Raspberry Pi OS on the RPi 468 in 'keyboard computer' mode at my desk.
 {: centeralign }
 
 Overall I'm quite happy with the result.
-Generally I use it most as a regular keyboard, especially when I travel.
-Since my work spaces at the office and at home have their own dedicated keyboard, this one usually stays in my backpack as a backup.
-
-It's strangely comforting to know that I have the low-level hardware capability of a Raspberry Pi with me at all times without any additional weight or backpack space being taken up.
-
-{% include image-gallery.html folder="/assets/img/2023-01-16-keyboard-computer-rpi468" %}
+I use it most as a regular keyboard, especially when I travel.
+Since my work spaces at the office and at home have their own dedicated keyboard, this one usually stays in my backpack as a fully-loaded Linux PC backup.
