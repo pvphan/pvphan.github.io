@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Primer on camera calibration, part 2/2"
+title: "Primer on camera calibration, part 2/2: Zhang's method"
 author: "Paul Vinh Phan"
 categories: journal
 image: schoolofathens.jpeg
@@ -48,10 +48,10 @@ The ordering of steps for Zhang's method are:
 Before we dive into the steps of Zhang's method, I'll present a **dependency graph** to illustrate which quantities contribute to which.
 This graph will serve as a map to aid in navigating the symbols and steps of Zhang's method.
 
-[![](assets/img/2022-04-03-camera-calibration-2/zhang-digraph.png){:width="600px"}](assets/img/2022-04-03-camera-calibration-2/zhang-digraph.png)
+[![](assets/img/2023-05-21-camera-calibration-2/zhang-digraph.png){:width="600px"}](assets/img/2023-05-21-camera-calibration-2/zhang-digraph.png)
 {: centeralign }
 
-Here, the symbols $$(z_i, X_i)$$ represent the point detections for the $$i$$-th view, where **$$z_i$$ are the 2D point detections** in the image and **$$X_i$$ are the corresponding 3D coordinates** of those point in the calibration board's coordinate frame.
+Here, the symbols $$(z_i, X_i)$$ represent the **point detections** for the $$i$$-th view, where **$$z_i$$ are the 2D point detections** in the image and **$$X_i$$ are the corresponding 3D coordinates** of those point in the calibration board's coordinate frame.
 
 
 # The steps of Zhang's method
