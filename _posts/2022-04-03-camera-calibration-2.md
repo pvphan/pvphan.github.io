@@ -56,7 +56,7 @@ To do this we employ two tricks:
 - Trick #2: We define the world coordinate system so that it's $$z = 0$$ plane is the **plane of the calibration target**.
 This allows us to drop the $$z$$ term of the 3D world points (7.b).
 
-Trick #1 simplifies our projection equation (5) to a distortion-less [**pinhole camera model**](https://hedivision.github.io/Pinhole.html):
+Trick #1 simplifies our projection equation [(5)]({% post_url 2022-03-27-camera-calibration-1 %}#mjx-eqn-eq:5) to a distortion-less [**pinhole camera model**](https://hedivision.github.io/Pinhole.html):
 
 $$
 \begin{equation}
@@ -504,9 +504,12 @@ This gif plays through the iterative refinement of the camera parameters (step #
 
 # Final remarks
 
-In part 2, we went into the theory of Zhang's popular calibration method for computing intial values for $$\textbf{A}, \textbf{k}, \textbf{W}$$ and their refinement.
-Camera calibration can be daunting due to assumed knowledge in camera projection models, linear algebra, and optimization.
+In part 2, we went into the steps of Zhang's popular calibration method for computing intial values for $$\textbf{A}, \textbf{k}, \textbf{W}$$ and their refinement.
 We walked through a common camera projection model and then stepped through Zhang's method, introducing numerical methods as needed.
+
+Camera calibration literature can be daunting due to assumed knowledge in camera projection models, linear algebra, and optimization.
+It is my hope that this post provided some context in these areas to demystify what happens when you call [`cv2.calibrateCamera()`](https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#ga3207604e4b1a1758aa66acb6ed5aa65d).
+If it's helpful, you'll find my heavily commented Python implementation here: [`calibrateCamera()`](https://github.com/pvphan/camera-calibration/blob/main/src/main.py#L11)
 
 Thanks for reading!
 
@@ -559,7 +562,7 @@ Additional links:
 - [Algorithms for Optimization (Kochenderfer & Wheeler)](https://mitpress.mit.edu/books/algorithms-optimization) (yay, Tim!)
 
 
-Substituting the definition of predicted position $$u_{ij}$$ from (5):
+Substituting the definition of predicted position $$u_{ij}$$ from [(5)]({% post_url 2022-03-27-camera-calibration-1 %}#mjx-eqn-eq:5):
 
 $$
 \begin{equation}
