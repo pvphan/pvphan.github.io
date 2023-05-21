@@ -21,7 +21,9 @@ Table of Contents:
 
 In [Part 1]({% post_url 2022-03-27-camera-calibration-1 %}), we defined the calibration parameters $$\textbf{A}, \textbf{W}, \textbf{k}$$ and sum-squared projection error, $$E$$.
 We now move on to how to **estimate and refine** these calibration parameters so we can reason spatially with images from that camera.
+
 For a more complete walkthrough of each step of Zhang's method, I've again linked the excellent [tutorial paper by Burger](https://www.researchgate.net/profile/Wilhelm-Burger/publication/303233579_Zhang's_Camera_Calibration_Algorithm_In-Depth_Tutorial_and_Implementation/links/5eaad8c9a6fdcc70509c3c9b/Zhangs-Camera-Calibration-Algorithm-In-Depth-Tutorial-and-Implementation.pdf).
+I'll also link again the 'from scratch' Python implementation I wrote here: [github.com/pvphan/camera-calibration](https://github.com/pvphan/camera-calibration).
 
 
 # What is 'Zhang's method'?
@@ -41,9 +43,9 @@ The ordering of steps for Zhang's method are:
 5. Initialize **non-linear optimization** with the *initial guesses* above and then **iterate** to minimize **projection error**, producing $$A_{final}$$, $$\textbf{W}_{final}$$, and $$\textbf{k}_{final}$$.
 
 
-# Intuition by dependency graph
+## Intuition by dependency graph
 
-Before we dive into the steps of Zhang's method, I'll present a **dependency graph** to illustrate which quantities contribute which.
+Before we dive into the steps of Zhang's method, I'll present a **dependency graph** to illustrate which quantities contribute to which.
 This graph will serve as a map to aid in navigating the symbols and steps of Zhang's method.
 
 [![](assets/img/2022-04-03-camera-calibration-2/zhang-digraph.png){:width="600px"}](assets/img/2022-04-03-camera-calibration-2/zhang-digraph.png)
@@ -505,11 +507,12 @@ Now we are ready to run our non-linear optimization algorithm, which in this cas
 1. Use $$\textbf{P}_{curr}$$ to project the input world points $${}^wX_{ij}$$ to their image coordinates $$u_{ij}$$
 1. Evaluate the Jacbobian $$J$$ for all input points at the *current* calibration parameter values.
 
-Below, green crosses are the measured 2D marker points and magenta crosses are the projection of the associated 3D points using the 'current' camera parameters.
+Below, **green crosses are the measured** 2D marker points and **magenta crosses are the projection** of the associated 3D points using the 'current' camera parameters.
 This gif plays through the iterative refinement of the camera parameters (step #5 of Zhang's method) for a synthetic example.
-(Generation of this gif from [here](https://github.com/pvphan/camera-calibration/blob/main/src/animate.py).)
 
 ![](assets/img/reprojection.gif)
+{: centeralign }
+Animated projection error of synthetic dataset created with [animate.py: createAnimation($$\cdot$$)](https://github.com/pvphan/camera-calibration/blob/main/src/animate.py#L64)
 {: centeralign }
 
 
