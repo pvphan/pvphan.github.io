@@ -15,7 +15,13 @@ Table of Contents:
 
 # Intro
 
-TL;DR: Raspberry Pi 400 + Tada68 = Raspberry Pi 468.
+TL;DR: I built a custom mechanical keyboard that can be used as an all-in-one computer or just a regular keyboard.
+Raspberry Pi 400 + Tada68 = Raspberry Pi 468.
+
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_195414086.jpg){:width="600px"}](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_195414086.jpg)
+{: centeralign }
+Completed Raspberry Pi 468 with built in USB host switching circuit, printed in PLA.
+{: centeralign }
 
 I'm someone who appreciates a tactile keyboard experience.
 When keystrokes have a positive, discrete feel, it provides a passive confirmation to my hands that my keypresses have had the intended effect.
@@ -23,7 +29,7 @@ This makes typing and writing code both more efficient and more enjoyable.
 
 [![](assets/img/2023-01-16-keyboard-computer-rpi468/tada68.jpg){:width="600px"}](assets/img/2023-01-16-keyboard-computer-rpi468/tada68.jpg)
 {: centeralign }
-The Tada68 mechanical keyboard ([source](https://www.aliexpress.com/i/2251832803921519.html?gatewayAdapt=4itemAdapt)).
+The Tada68 mechanical keyboard, named for its 68 keys ([source](https://www.aliexpress.com/i/2251832803921519.html?gatewayAdapt=4itemAdapt)).
 {: centeralign }
 
 I'm also someone who loves the ethos around the Raspberry Pi single board computer -- a small, inexpensive computer put into the hands of as many people as possible.
@@ -50,9 +56,9 @@ And so I set to work to combine my trusty (albiet aging) Tada68 mechanical keybo
 - design a sturdy custom case that I could print and assemble at home
 - do some ugly soldering
 
-[![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_195414086.jpg){:width="600px"}](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_195414086.jpg)
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_194531996.jpg)](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_194531996.jpg)
 {: centeralign }
-Completed Raspberry Pi 468 with built in USB host switching circuit, printed in PLA.
+Running Raspberry Pi OS on the RPi 468 in 'keyboard computer' mode at my desk.
 {: centeralign }
 
 
@@ -154,9 +160,7 @@ Links to files:
 
 # Final result
 
-[![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_194531996.jpg)](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_194531996.jpg)
-{: centeralign }
-Running Raspberry Pi OS on the RPi 468 in 'keyboard computer' mode at my desk.
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_195438896.jpg){:width="600px"}](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_195438896.jpg)
 {: centeralign }
 
 Overall I'm quite happy with the result.
@@ -167,3 +171,12 @@ In my latest iteration (which I won't document here), I designed a passive heats
 I also changed the material to PETG instead of PLA for improved durability and heat tolerance.
 
 Thanks for reading!
+
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220827_031512609.jpg){:width="600px"}](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220827_031512609.jpg)
+{: centeralign }
+
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_195426975.jpg){:width="600px"}](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220828_195426975.jpg)
+{: centeralign }
+
+[![](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220820_182651189.jpg){:width="600px"}](assets/img/2023-01-16-keyboard-computer-rpi468/PXL_20220820_182651189.jpg)
+{: centeralign }

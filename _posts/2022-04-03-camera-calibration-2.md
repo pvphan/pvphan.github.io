@@ -19,9 +19,9 @@ Table of Contents:
 
 # Intro
 
-In [Part 1]({% post_url 2022-03-27-camera-calibration-1 %}), we defined the calibration parameters $$\textbf{A}, \textbf{k}, \textbf{W}$$ and sum-squared projection error, $$E$$.
+In [Part 1]({% post_url 2022-03-27-camera-calibration-1 %}), we defined the calibration parameters $$\textbf{A}, \textbf{W}, \textbf{k}$$ and sum-squared projection error, $$E$$.
 We now move on to how to **estimate and refine** these calibration parameters so we can reason spatially with images from that camera.
-For a more complete walkthrough of each step of Zhang's method, here's a link to the [tutorial paper by Burger](https://www.researchgate.net/profile/Wilhelm-Burger/publication/303233579_Zhang's_Camera_Calibration_Algorithm_In-Depth_Tutorial_and_Implementation/links/5eaad8c9a6fdcc70509c3c9b/Zhangs-Camera-Calibration-Algorithm-In-Depth-Tutorial-and-Implementation.pdf) again.
+For a more complete walkthrough of each step of Zhang's method, I've again linked the excellent [tutorial paper by Burger](https://www.researchgate.net/profile/Wilhelm-Burger/publication/303233579_Zhang's_Camera_Calibration_Algorithm_In-Depth_Tutorial_and_Implementation/links/5eaad8c9a6fdcc70509c3c9b/Zhangs-Camera-Calibration-Algorithm-In-Depth-Tutorial-and-Implementation.pdf).
 
 
 # What is 'Zhang's method'?
@@ -36,9 +36,20 @@ The general strategy of Zhang's method is to impose naïve assumptions as constr
 The ordering of steps for Zhang's method are:
 1. Use the 2D-3D point associations to compute the per-view set of homographies $$\textbf{H}$$.
 2. Use the homographies $$\textbf{H}$$ to compute an *initial guess* for the **intrinsic matrix**, $$A_{init}$$.
-3. Using the above, compute an *initial guess* for the **distortion parameters**, $$\textbf{k}_{init}$$.
-4. Using the above, compute an *initial guess* for the **camera pose** (per-view) in target coordinates, $$\textbf{W}_{init}$$.
-5. Initialize **non-linear optimization** with the *initial guesses* above and then **iterate** to minimize **projection error**, producing $$A_{final}$$, $$\textbf{k}_{final}$$, and $$\textbf{W}_{final}$$.
+3. Using the above, compute an *initial guess* for the **camera pose** (per-view) in target coordinates, $$\textbf{W}_{init}$$.
+4. Using the above, compute an *initial guess* for the **distortion parameters**, $$\textbf{k}_{init}$$.
+5. Initialize **non-linear optimization** with the *initial guesses* above and then **iterate** to minimize **projection error**, producing $$A_{final}$$, $$\textbf{W}_{final}$$, and $$\textbf{k}_{final}$$.
+
+
+# Intuition by dependency graph
+
+Before we dive into the steps of Zhang's method, I'll present a **dependency graph** to illustrate which quantities contribute which.
+This graph will serve as a map to aid in navigating the symbols and steps of Zhang's method.
+
+[![](assets/img/2022-04-03-camera-calibration-2/zhang-digraph.png){:width="600px"}](assets/img/2022-04-03-camera-calibration-2/zhang-digraph.png)
+{: centeralign }
+
+Here, the symbols $$(z_i, X_i)$$ represent the point detections for the $$i$$-th view, where **$$z_i$$ are the 2D point detections** in the image and **$$X_i$$ are the corresponding 3D coordinates** of those point in the calibration board's coordinate frame.
 
 
 # The steps of Zhang's method
@@ -353,23 +364,23 @@ $$
 ### Solve for $$\textbf{h}$$ in $$M \cdot \textbf{h} = \textbf{0}$$ using SVD
 
 We've now got the values right where we want them in order to solve for $$\textbf{h}_i$$ using singular value decomposition (SVD).
-I'm not knowledgeable enough in this area to give a satisfying explanation, so I'll instead provide some pointers to better SVD sources in the [$$\S$$Appendix: SVD](#singular-value-decomposition-svd) and provide a practical example calling SVD via a math library such as `numpy`:
+I'm not knowledgeable enough abot SVD to give a satisfying explanation, so I'll instead provide some pointers to better SVD sources in the [$$\S$$Appendix: SVD](#singular-value-decomposition-svd) and provide a practical example calling SVD via `numpy`:
 
 ```python
 # M * h = 0, where M (m,n) is known and we want to solve for h (n,1)
-U, Σ, V_T = np.linalg.svd(M)
+U, Σ, V_T = numpy.linalg.svd(M)
 # the solution, h, is the smallest eigenvector of V_T
 h = V_T[-1]
 ```
 
-**Code**: For a Python example of the steps from Zhang.1, you can look at [linearcalibrate.py: estimateHomography](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L24).
+**Code**: For a Python example of the steps from Zhang.1, you can look at [linearcalibrate.py: estimateHomography($\cdot$)](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L24). This example has a normalization step which is omitted here for simplicity. The normalization step is critical for a real application.
 
 
 ## Zhang.2) Compute initial intrinsic matrix, $$A_{init}$$
 
-Now that we can solve for a single homography for view, $$H_i$$, we'll solve for each view's homography an store them in a vector of homographies, $$\textbf{H}$$.
+Now that we solved for the homography of each view, $$H_i$$, we'll store them in a vector of homographies, $$\textbf{H}$$.
 
-$$\textbf{H}$$ will be the input to our function to solve for our initial estimate (or "guess") for the intrinsic camera matrix, $$A_{init}$$.
+$$\textbf{H}$$ will be the input to our function to solve for our initial estimate for the intrinsic camera matrix, $$A_{init}$$.
 Recall from equation (8) and (10) the definition of a single homography matrix, $$H_i$$:
 
 $$
@@ -465,23 +476,23 @@ $$
 ### Solve for $$b$$ in $$V \cdot \textbf{b} = \textbf{0}$$ using SVD
 
 
-**Code**: For a Python example of this, you can look at [linearcalibrate.py: computeIntrinsicMatrix](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L93).
+**Code**: For a Python example of this, you can look at [linearcalibrate.py: computeIntrinsicMatrix($\cdot$)](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L93).
 
 
-## Zhang.3) Compute initial distortion vector, $$k_{init}$$
+## Zhang.3) Compute initial extrinsic parameters, $$W_{init}$$
 
-**Code**: For a Python example of this, you can look at [distortion.py: estimateDistortion](https://github.com/pvphan/camera-calibration/blob/main/src/distortion.py#L110).
+**Code**: For a Python example of this, you can look at [linearcalibrate.py: computeExtrinsics($\cdot$)](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L306).
+
+
+## Zhang.4) Compute initial distortion vector, $$k_{init}$$
+
+**Code**: For a Python example of this, you can look at [distortion.py: estimateDistortion($\cdot$)](https://github.com/pvphan/camera-calibration/blob/main/src/distortion.py#L110).
 Though this method is part of a class it can be thought of as a pure function.
 
 
-## Zhang.4) Compute initial extrinsic parameters, $$W_{init}$$
+## Zhang.5) Refine A, W, k using non-linear optimization
 
-**Code**: For a Python example of this, you can look at [linearcalibrate.py: computeExtrinsics](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L306).
-
-
-## Zhang.5) Refine A, k, W using non-linear optimization
-
-Until now, we've been estimating $$\textbf{A}, \textbf{k}, \textbf{W}$$ to get a good initialization point for our optimization.
+Until now, we've been estimating $$\textbf{A}, \textbf{W}, \textbf{k}$$ to get a good initialization point for our optimization.
 In non-linear optimization, it's often impossible to arrive at a good solution unless the initialization point for the variables was at least somewhat reasonable.
 
 1. Express the projection equation symbolically (e.g. `sympy`).
@@ -504,12 +515,12 @@ This gif plays through the iterative refinement of the camera parameters (step #
 
 # Final remarks
 
-In part 2, we went into the steps of Zhang's popular calibration method for computing intial values for $$\textbf{A}, \textbf{k}, \textbf{W}$$ and their refinement.
+In part 2, we went into the steps of Zhang's popular calibration method for computing intial values for $$\textbf{A}, \textbf{W}$$, and \textbf{k}  their refinement.
 We walked through a common camera projection model and then stepped through Zhang's method, introducing numerical methods as needed.
 
 Camera calibration literature can be daunting due to assumed knowledge in camera projection models, linear algebra, and optimization.
 It is my hope that this post provided some context in these areas to demystify what happens when you call [`cv2.calibrateCamera()`](https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#ga3207604e4b1a1758aa66acb6ed5aa65d).
-If it's helpful, you'll find my heavily commented Python implementation here: [`calibrateCamera()`](https://github.com/pvphan/camera-calibration/blob/main/src/main.py#L11)
+If it's helpful, you'll find my commented Python implementation here: [`main.py: calibrateCamera()`](https://github.com/pvphan/camera-calibration/blob/main/src/main.py#L11).
 
 Thanks for reading!
 
