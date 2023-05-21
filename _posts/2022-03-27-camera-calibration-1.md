@@ -38,21 +38,21 @@ A camera captures light from a 3D world and projects it onto a 2D sensor which s
 In other words, a **2D point** in the image is equivalent to a **3D ray** in the scene.
 A camera is **calibrated** if we know the *camera parameters* which define the mapping between these spaces.
 
-Camera calibration is the process of computing the **camera parameters**: $$\textbf{A}$$, $$\textbf{k}$$, and $$\textbf{W}$$.
+Camera calibration is the process of computing the **camera parameters**: $$A$$, $$\textbf{W}$$, and $$\textbf{k}$$.
 These are further discussed just below in the [$$\S$$camera parameters](#camera-parameters) section.
 
 A camera calibration **dataset** is gathered by capturing multiple images of a known physical calibration target and varying the board pose with respect to the camera for each view.
 
-So, given multiple images of a known calibration target, camera calibration computes the camera parameters: $$\textbf{A}$$, $$\textbf{k}$$, and $$\textbf{W}$$.
+So, given multiple images of a known calibration target, camera calibration computes the camera parameters: $$A$$, $$\textbf{W}$$, and $$\textbf{k}$$.
 And with these parameters, we can **reason spatially** about the world from images!
 
 
-# Camera parameters: A, k, W
+# Camera parameters: A, W, k
 
 You'll have to bear with these largely unmotivated definitions for a moment.
 I wanted them laid out plainly here in one spot, and their use will be explained in the next section on [$$\S$$projection](#projection-from-3d-world-point-to-2d-image-point).
 
-- $$\textbf{A}$$ --- the **intrinsic matrix**,
+- $$A$$ --- the **intrinsic matrix**,
 $$
 \begin{pmatrix}
 \alpha & \gamma & u_0\\
@@ -65,7 +65,10 @@ $$
     - $$\gamma$$ --- the skew ratio, typically 0
     - $$u_0$$ --- u coordinate of optical center in image coordinates
     - $$v_0$$ --- v coordinate of optical center in image coordinates
-    - In other literature, the intrinsic matrix $$\textbf{A}$$ is often denoted $$\textbf{K}$$, $$\alpha$$ as $$f_x$$, $$\beta$$ as $$f_y$$, etc
+    - In other literature, the intrinsic matrix $$A$$ is often denoted $$\textbf{K}$$, $$\alpha$$ as $$f_x$$, $$\beta$$ as $$f_y$$, etc
+- $$\textbf{W}$$ --- the **per-view set of transforms** (also called **extrinsic** parameters) from world to camera, which is a list of N 4x4 matrices
+    - $$\textbf{W} = [W_1, W_2, ..., W_n]$$, where $$W_i$$ is the $$i$$-th **rigid-body transform** from *world* to *camera*, which is also the **pose** of the *world* in *camera* coordinates (see the [$$\S$$appendix](#appendix) for more discussion on convention)
+    - Here, and in other literature, the coordinate frame of the *calibration board* is called the *world* coordinate frame. All of these coordinate frames are equivalent in this post: **world** $$=$$ **target** $=$ **calibration board**
 - $$\textbf{k}$$ --- the **distortion vector**:
 $$
 \begin{pmatrix}
@@ -73,21 +76,18 @@ k_1 & k_2 & p_1 & p_2 & k_3
 \end{pmatrix}
 $$
     - $$k_i$$ values correspond to radial distortion and $$p_i$$ values correspond to tangential distortion (for the so-call *radial-tangential* distortion model)
-- $$\textbf{W}$$ --- the **per-view set of transforms** (also called **extrinsic** parameters) from world to camera, which is a list of N 4x4 matrices
-    - $$\textbf{W} = [W_1, W_2, ..., W_n]$$, where $$W_i$$ is the $$i$$-th **rigid-body transform** from *world* to *camera*, which is also the **pose** of the *world* in *camera* coordinates (see the [$$\S$$appendix](#appendix) for more discussion on convention)
-    - Here, and in other literature, the coordinate frame of the *calibration board* is called the *world* coordinate frame. All of these coordinate frames are equivalent in this post: **world** $$=$$ **target** $=$ **calibration board**
 
 
 # Projection: from 3D world point to 2D image point
 
-The journey of a 3D world point to a 2D image point is a series of **four transformations**, corresponding almost one-to-one with the calibration parameters $$\textbf{A}$$, $$\textbf{k}$$, and $$\textbf{W}$$ we are solving for.
+The journey of a 3D world point to a 2D image point is a series of **four transformations**, corresponding almost one-to-one with the calibration parameters $$A$$, $$\textbf{W}$$, and $$\textbf{k}$$ we are solving for.
 Each step has an equation in it's compact form (X.a) and in more verbose form (X.b).
 
 A quick summary of the journey:
 1. Rigidly transform 3D points in world coordinates to 3D camera coordinates with $$\textbf{W}$$.
 2. Project these 3D points into the cameras 2D 'normalized plane' ($$z = 1$$).
 3. Distort the normalized 2D points by the distortion model and parameters $$\textbf{k}$$.
-4. Project the distorted-normalized points into the 2D image coordinates with the intrinsic matrix $$\textbf{A}$$.
+4. Project the distorted-normalized points into the 2D image coordinates with the intrinsic matrix $$A$$.
 
 We'll call each step Proj.\<N\> to disambiguate with the steps of Zhang's method in part 2.
 
@@ -264,7 +264,7 @@ The $$distort(\cdot)$$ function here is dependent upon the selected lens distort
 Here we use the popular **radial-tangential** distortion model (also called the *Plumb Bob* or *Brown-Conrady* model [(source: calib.io)](https://calib.io/blogs/knowledge-base/camera-models)).
 
 
-## Proj.4) Use $$\textbf{A}$$: 2D distorted-normalized point to 2D image point
+## Proj.4) Use $$A$$: 2D distorted-normalized point to 2D image point
 
 ![](assets/img/2022-03-27-camera-calibration/projectiontoimage.png)
 {: centeralign }
@@ -275,7 +275,7 @@ The value $$u$$ increases from left-to-right, and $$v$$ increases from top-to-bo
 
 $$
 \begin{equation}
-u_{ij} = hom^{-1}(\textbf{A} \cdot hom(\tilde{x}_{ij}))
+u_{ij} = hom^{-1}(A \cdot hom(\tilde{x}_{ij}))
 \tag{4.a}\label{eq:4.a}
 \end{equation}
 $$
@@ -309,7 +309,7 @@ $$
 - $$u_{ij}$$ --- the 2D image point
     - $$u$$ --- the horizontal component of the image point
     - $$v$$ --- the vertical component of the image point
-- $$\textbf{A}$$ --- the **intrinsic matrix**
+- $$A$$ --- the **intrinsic matrix**
 - $$hom(\cdot)$$ --- the function which maps an unhomogeneous point to it's homogeneous equivalent (for a 2D point, append a 1 to the end of the vector)
 
 The rest of the variables have been previously described in the  [$$\S$$camera parameters](#camera-parameters) section and won't be repeated here.
@@ -327,7 +327,7 @@ u_{ij}
 =
 \underbrace{hom^{-1}
 (
-    \textbf{A}
+    A
     \cdot
     hom(
         \underbrace{distort(
@@ -342,7 +342,7 @@ u_{ij}
 \end{equation}
 $$
 
-We've now defined a basis for **predicting** where a point will be in our image provided we have a known target point $${}^wX_{ij}$$ and values for the calibration parameters $$\textbf{A}, \textbf{k}, W_i$$.
+We've now defined a basis for **predicting** where a point will be in our image provided we have a known target point $${}^wX_{ij}$$ and values for the calibration parameters $$A, W_i, \textbf{k}$$.
 
 But how do we **measure** (or **detect**) the 2D points from the images in our dataset?
 
@@ -369,7 +369,7 @@ This is typically done by computing **sum-squared projection error**, $$E$$.
 The lower that error metric is, the more closely our camera parameters fit the measurements from the input images.
 - From each image, we have the detected marker points. Each marker point is a single **2D measurement**, which we denote as $$z_{ij}$$ for the $$j$$-th measured point of the $$i$$-th image.
 - From each measurement $$z_{ij}$$, we also have the **corresponding 3D point** in target coordinates $${}^wX_{ij}$$ (known by construction).
-- With a set of calibration parameters ($$\textbf{A}$$, $$\textbf{k}$$, $$W_i$$), we can then project where that 3D point should appear in the 2D image --- a single **2D prediction**, which we express as the image point, $$u_{ij}$$.
+- With a set of calibration parameters ($$A$$, $$W_i$$, $$\textbf{k}$$), we can then project where that 3D point should appear in the 2D image --- a single **2D prediction**, which we express as the image point, $$u_{ij}$$.
 - The Euclidean distance between the 2D prediction and 2D measurement is the **projection error** for a single point.
 
 ![](assets/img/2022-03-27-camera-calibration/projectionerror.png)

@@ -19,7 +19,7 @@ Table of Contents:
 
 # Intro
 
-In [Part 1]({% post_url 2022-03-27-camera-calibration-1 %}), we defined the calibration parameters $$\textbf{A}, \textbf{W}, \textbf{k}$$ and sum-squared projection error, $$E$$.
+In [Part 1]({% post_url 2022-03-27-camera-calibration-1 %}), we defined the calibration parameters $$A, \textbf{W}, \textbf{k}$$ and sum-squared projection error, $$E$$.
 We now move on to how to **estimate and refine** these calibration parameters so we can reason spatially with images from that camera.
 
 For a more complete walkthrough of each step of Zhang's method, I've again linked the excellent [tutorial paper by Burger](https://www.researchgate.net/profile/Wilhelm-Burger/publication/303233579_Zhang's_Camera_Calibration_Algorithm_In-Depth_Tutorial_and_Implementation/links/5eaad8c9a6fdcc70509c3c9b/Zhangs-Camera-Calibration-Algorithm-In-Depth-Tutorial-and-Implementation.pdf).
@@ -77,7 +77,7 @@ u_{ij}
 =
 hom^{-1}
 (
-\textbf{A}
+A
 \cdot
 \Pi \cdot W_i \cdot {}^wX_{ij}
 )
@@ -98,7 +98,7 @@ _{ij}
 =
 hom^{-1}
 \left(
-\textbf{A}
+A
 \cdot
 \begin{bmatrix}
 1 & 0 & 0 & 0\\
@@ -125,7 +125,7 @@ _{ij}
 $$
 
 Now we can strike out the 3rd column of $$W_i$$ and 3rd row of $${}^wX_{ij}$$, and rewrite the $$hom^{-1}(\cdot)$$ as a scale factor $$s$$.
-We'll call the product of $$\textbf{A}$$ and that 3-by-3 matrix our **homography**, $$H_i$$:
+We'll call the product of $$A$$ and that 3-by-3 matrix our **homography**, $$H_i$$:
 
 $$
 \begin{equation}
@@ -138,7 +138,7 @@ v\\
 _{ij}
 =
 \underbrace{
-    \textbf{A}
+    A
     \cdot
     \begin{bmatrix}
     |     & |     & t_x\\
@@ -375,7 +375,9 @@ U, Σ, V_T = numpy.linalg.svd(M)
 h = V_T[-1]
 ```
 
-**Code**: For a Python example of the steps from Zhang.1, you can look at [linearcalibrate.py: estimateHomography($\cdot$)](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L24). This example has a normalization step which is omitted here for simplicity. The normalization step is critical for a real application.
+**Code**: For a Python example of the steps from Zhang.1, you can look at [linearcalibrate.py: estimateHomography($\cdot$)](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L24).
+This example has a normalization step and iterative refinement step which are omitted in this post for simplicity.
+The normalization step is critical for numeric stability, though I got away without it for some input cases.
 
 
 ## Zhang.2) Compute initial intrinsic matrix, $$A_{init}$$
@@ -399,7 +401,7 @@ _{i}
 =
 \lambda
 \cdot
-\textbf{A}
+A
 \cdot
 \begin{bmatrix}
 |     & |     & |\\
@@ -455,7 +457,7 @@ h_{1}
 =
 \lambda
 \cdot
-\textbf{A}
+A
 \cdot
 r_{x}
 \\
@@ -464,7 +466,7 @@ h_{2}
 =
 \lambda
 \cdot
-\textbf{A}
+A
 \cdot
 r_{y}
 
@@ -483,6 +485,75 @@ $$
 
 ## Zhang.3) Compute initial extrinsic parameters, $$W_{init}$$
 
+Now that we have an approximate intrinsic matrix, $$A_{init}$$, we can approximate $$\textbf{W}_{init}$$, a list of world-to-camera transforms corresponding to each of the views.
+
+Recall that $$W_i$$
+Looking at the example of a single transform $$W_i$$ corresponding to homography $$H_i$$ and expanding row-wise from equation (18):
+
+$$
+\begin{equation}
+\begin{split}
+
+r_{x}
+=
+\lambda
+\cdot
+A^{-1}
+\cdot
+h_{1}
+\\
+
+r_{y}
+=
+\lambda
+\cdot
+A^{-1}
+\cdot
+h_{2}
+\\
+
+t
+=
+\lambda
+\cdot
+A^{-1}
+\cdot
+h_{3}
+
+\end{split}
+\tag{21}\label{eq:21}
+\end{equation}
+$$
+
+where $$\lambda$$ is the normalizing factor to ensure $$r_x$$ and $$r_y$$ are unit vectors, computed as:
+
+$$
+\begin{equation}
+\begin{split}
+
+\lambda
+=
+\frac{1}{
+||
+A^{-1}
+\cdot
+h_{1}
+||
+}
+=
+\frac{1}{
+||
+A^{-1}
+\cdot
+h_{2}
+||
+}
+
+\end{split}
+\tag{22}\label{eq:22}
+\end{equation}
+$$
+
 **Code**: For a Python example of this, you can look at [linearcalibrate.py: computeExtrinsics($\cdot$)](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L306).
 
 
@@ -494,7 +565,7 @@ Though this method is part of a class it can be thought of as a pure function.
 
 ## Zhang.5) Refine A, W, k using non-linear optimization
 
-Until now, we've been estimating $$\textbf{A}, \textbf{W}, \textbf{k}$$ to get a good initialization point for our optimization.
+Until now, we've been estimating $$A, \textbf{W}, \textbf{k}$$ to get a good initialization point for our optimization.
 In non-linear optimization, it's often impossible to arrive at a good solution unless the initialization point for the variables was at least somewhat reasonable.
 
 1. Express the projection equation symbolically (e.g. `sympy`).
@@ -518,7 +589,7 @@ Animated projection error of synthetic dataset created with [animate.py: createA
 
 # Final remarks
 
-In part 2, we went into the steps of Zhang's popular calibration method for computing intial values for $$\textbf{A}, \textbf{W}$$, and \textbf{k}  their refinement.
+In part 2, we went into the steps of Zhang's popular calibration method for computing intial values for $$A, \textbf{W}, \textbf{k}$$ and their refinement.
 We walked through a common camera projection model and then stepped through Zhang's method, introducing numerical methods as needed.
 
 Camera calibration literature can be daunting due to assumed knowledge in camera projection models, linear algebra, and optimization.
@@ -589,7 +660,7 @@ z_{ij}
 -
 hom^{-1}
 (
-    \textbf{A}
+    A
     \cdot
     hom(
         distort(
