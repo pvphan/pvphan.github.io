@@ -19,6 +19,12 @@ Table of Contents:
 
 # Intro
 
+**
+Notice: this post is still under construction!
+Incomplete sections will be called out at the beginning.
+In particular, Zhang.2 is about halfway done, and Zhang.4 is empty.
+**
+
 In [Part 1]({% post_url 2022-03-27-camera-calibration-1 %}), we defined the calibration parameters $$A, \textbf{W}, \textbf{k}$$ and sum-squared projection error, $$E$$.
 We now move on to how to **estimate and refine** these calibration parameters so we can reason spatially with images from that camera.
 
@@ -382,7 +388,7 @@ The normalization step is critical for numeric stability, though I got away with
 
 ## Zhang.2) Compute initial intrinsic matrix, $$A_{init}$$
 
-Now that we solved for the homography of each view, $$H_i$$, we'll store them in a vector of homographies, $$\textbf{H}$$.
+Now that we solved for the homography of each view, $$H_i$$, we'll store them in a vector of homographies, $$\textbf{H} = [H_1, H_2, ..., H_n]$$.
 
 $$\textbf{H}$$ will be the input to our function to solve for our initial estimate for the intrinsic camera matrix, $$A_{init}$$.
 Recall from equation (8) and (10) the definition of a single homography matrix, $$H_i$$:
@@ -394,7 +400,7 @@ _{i}
 =
 \begin{bmatrix}
 |     & |     & |    \\
-h_{1} & h_{2} & h_{3}\\
+h_{0} & h_{1} & h_{2}\\
 |     & |     & |    \\
 \end{bmatrix}
 _{i}
@@ -453,7 +459,7 @@ $$
 \begin{equation}
 \begin{split}
 
-h_{1}
+h_{0}
 =
 \lambda
 \cdot
@@ -462,7 +468,7 @@ A
 r_{x}
 \\
 
-h_{2}
+h_{1}
 =
 \lambda
 \cdot
@@ -479,53 +485,67 @@ $$
 
 ### Solve for $$b$$ in $$V \cdot \textbf{b} = \textbf{0}$$ using SVD
 
+**This section under construction!**
 
 **Code**: For a Python example of this, you can look at [linearcalibrate.py: computeIntrinsicMatrix($\cdot$)](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L93).
 
 
 ## Zhang.3) Compute initial extrinsic parameters, $$W_{init}$$
 
-Now that we have an approximate intrinsic matrix, $$A_{init}$$, we can approximate $$\textbf{W}_{init}$$, a list of world-to-camera transforms corresponding to each of the views.
+Now that we have an approximate intrinsic matrix, $$A_{init}$$, we can approximate $$\textbf{W}_{init} = [W_1, W_2, ..., W_n]$$, a list of world-to-camera transforms corresponding to each of the views.
 
-Recall that $$W_i$$
+Recall the definition of a single world-to-camera transform $$W_i$$ from equations
+([1.a]({% post_url 2022-03-27-camera-calibration-1 %}#mjx-eqn-eq:1.a), [1.b]({% post_url 2022-03-27-camera-calibration-1 %}#mjx-eqn-eq:1.b)):
+
+$$
+W_i
+=
+\begin{bmatrix}
+|     & |     & |     & |\\
+r_{x} & r_{y} & r_{z} & t\\
+|     & |     & |     & |\\
+0 & 0 & 0 & 1\\
+\end{bmatrix}_i
+$$
+
 Looking at the example of a single transform $$W_i$$ corresponding to homography $$H_i$$ and expanding row-wise from equation (18):
 
 $$
 \begin{equation}
 \begin{split}
 
-r_{x}
+r_{x}'
 =
-\lambda
+\lambda^{-1}
+\cdot
+A^{-1}
+\cdot
+h_{0}
+\\
+
+r_{y}'
+=
+\lambda^{-1}
 \cdot
 A^{-1}
 \cdot
 h_{1}
 \\
 
-r_{y}
+t
 =
-\lambda
+\lambda^{-1}
 \cdot
 A^{-1}
 \cdot
 h_{2}
-\\
-
-t
-=
-\lambda
-\cdot
-A^{-1}
-\cdot
-h_{3}
 
 \end{split}
 \tag{21}\label{eq:21}
 \end{equation}
 $$
 
-where $$\lambda$$ is the normalizing factor to ensure $$r_x$$ and $$r_y$$ are unit vectors, computed as:
+where $$\lambda$$ is the scale factor to ensure $$r_x$$ and $$r_y$$ are unit vectors, computed as:
 
 $$
 \begin{equation}
@@ -533,31 +553,82 @@ $$
 
 \lambda
 =
-\frac{1}{
+||
+A^{-1}
+\cdot
+h_{0}
+||
+=
 ||
 A^{-1}
 \cdot
 h_{1}
 ||
-}
-=
-\frac{1}{
-||
-A^{-1}
-\cdot
-h_{2}
-||
-}
 
 \end{split}
 \tag{22}\label{eq:22}
 \end{equation}
 $$
 
+We next compute the missing the quantity $$r_z'$$ which is simply the cross product of $$r_x$$ and $$r_y$$ for an orthonormal rotation matrix:
+
+$$
+\begin{equation}
+\begin{split}
+r_{z}'
+=
+r_{x}'
+\times
+r_{y}'
+\end{split}
+\tag{23}\label{eq:23}
+\end{equation}
+$$
+
+I've designated these rotation matrix components with a 'prime' marker since it's unlikely they make up a true rotation matrix in $$SO(3)$$.
+To ensure we get $$R \in SO(3)$$, there is one more numerical trick to play:
+
+Let the 3x3 matrix $$Q$$ be defined as an intermediate matrix:
+
+$$
+\begin{equation}
+Q
+=
+\begin{bmatrix}
+|      & |      & |     \\
+r_{x}' & r_{y}' & r_{z}'\\
+|      & |      & |     \\
+\end{bmatrix}
+\tag{24}\label{eq:24}
+\end{equation}
+$$
+
+$$
+\begin{equation}
+R
+=
+\begin{bmatrix}
+|      & |      & |  \\
+r_{x} & r_{y} & r_{z}\\
+|      & |      & |  \\
+\end{bmatrix}
+=
+approxRot3(Q)
+\tag{25}\label{eq:25}
+\end{equation}
+$$
+
+This `approxRot3()` method was originally proposed in the Zhang paper in Appendix C.
+I'm unprepared to give an eloquent explantion of it, but the gist is to find $$R$$ which minimizes the Frobenius norm of $$R - Q$$ subject to $$R^T R = I$$.
+
+We now have the rotation matrix $$R \in SO(3)$$ and translation vector $$t \in \mathbb{R^3}$$ which make up $$W_i \in SE(3)$$.
+
 **Code**: For a Python example of this, you can look at [linearcalibrate.py: computeExtrinsics($\cdot$)](https://github.com/pvphan/camera-calibration/blob/main/src/linearcalibrate.py#L306).
 
 
 ## Zhang.4) Compute initial distortion vector, $$k_{init}$$
+
+**This section under construction!**
 
 **Code**: For a Python example of this, you can look at [distortion.py: estimateDistortion($\cdot$)](https://github.com/pvphan/camera-calibration/blob/main/src/distortion.py#L110).
 Though this method is part of a class it can be thought of as a pure function.
@@ -568,13 +639,15 @@ Though this method is part of a class it can be thought of as a pure function.
 Until now, we've been estimating $$A, \textbf{W}, \textbf{k}$$ to get a good initialization point for our optimization.
 In non-linear optimization, it's often impossible to arrive at a good solution unless the initialization point for the variables was at least somewhat reasonable.
 
-1. Express the projection equation symbolically (e.g. `sympy`).
+Here were the general steps I took to set up this optimization:
+
+1. Express the projection equation symbolically with a symbolic library (e.g. `sympy`).
 1. Take the partial derivatives of the projection expression with respect to the calibration parameters.
 1. Arrange these partial derivative expressions into the Jacobian matrix $$J$$ for the projection expression.
 
 Now we are ready to run our non-linear optimization algorithm, which in this case is Levenberg-Marquardt (see [$$\S$$Appendix: Nonlinear least squares](#non-linear-least-squares-optimization-levenberg-marquardt) for more).
 
-1. Start by setting the *current* calibration parameters $$\textbf{P}_{curr}$$ to the initial guess values computed in Zhang.1 - Zhang.3.
+1. Start by setting the *current* calibration parameters $$\textbf{P}_{curr}$$ to the initial guess values computed in Zhang.1 - Zhang.5.
 1. Use $$\textbf{P}_{curr}$$ to project the input world points $${}^wX_{ij}$$ to their image coordinates $$u_{ij}$$
 1. Evaluate the Jacbobian $$J$$ for all input points at the *current* calibration parameter values.
 
@@ -645,34 +718,4 @@ Visualization of Gauss-Newton optimization ([source](https://www1.hft-leipzig.de
 
 Additional links:
 - [Algorithms for Optimization (Kochenderfer & Wheeler)](https://mitpress.mit.edu/books/algorithms-optimization) (yay, Tim!)
-
-
-Substituting the definition of predicted position $$u_{ij}$$ from [(5)]({% post_url 2022-03-27-camera-calibration-1 %}#mjx-eqn-eq:5):
-
-$$
-\begin{equation}
-E
-=
-\sum\limits_{i}^{n} \sum\limits_{j}^{m}
-
-||
-z_{ij}
--
-hom^{-1}
-(
-    A
-    \cdot
-    hom(
-        distort(
-            hom^{-1}(
-                \Pi \cdot W_i \cdot {}^wX_{ij}
-            ),
-            \textbf{k}
-        )
-    )
-)
-||^2
-\tag{6.b}\label{eq:6.b}
-\end{equation}
-$$
 
